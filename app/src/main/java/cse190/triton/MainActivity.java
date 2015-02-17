@@ -82,7 +82,7 @@ public class MainActivity extends ActionBarActivity {
             public void onClick( View v) {
                 final int status = (int) v.getTag();
 
-                //status for dealing everyones hand
+                //status for dealing everyone hand
                 if(status == 0) {
 
                     cards.setText("");
