@@ -1,31 +1,23 @@
 package cse190.triton;
 
-import android.app.Activity;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Toast;
 import android.widget.TextView;
 
 import android.content.res.AssetManager;
 
-import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.IOException;
 
-
-import java.lang.reflect.Array;
-import java.util.Arrays;
-import java.util.Random;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
 import android.widget.Button;
 import android.content.pm.ActivityInfo;
-import android.media.Image;
+
 import android.widget.ImageView;
 
 import static cse190.triton.NikiConstants.*;
@@ -61,9 +53,9 @@ public class MainActivity extends ActionBarActivity {
         final ImageView river = (ImageView) findViewById(R.id.river);
 
         //load all possible outcomes
-        final Eva eva = new Eva();
+        //final Eva eva = new Eva();
         final AssetManager assetManager = getAssets();
-        loader(assetManager, eva);
+        loader(assetManager);
 
         myHand.setText("");
         opHand.setText("");
@@ -81,7 +73,7 @@ public class MainActivity extends ActionBarActivity {
 
             //init all the classes.
             Deck bitDeck = new Deck();
-            CPlot cplot = new CPlot();
+            //CPlot cplot = new CPlot();
             Hand[] allHands = new Hand[numPlayers];
 
             String[] flopper;
@@ -103,13 +95,10 @@ public class MainActivity extends ActionBarActivity {
                         allHands = setHands(n, deck,bitDeck, allHands, picHands);
                     }
 
-                    //load enumhands
-                    loader(assetManager, eva);
-
                     //get all 5 cards for holdem
                     bitDeck.enumRandom();
                     long flopCards = bitDeck.getBoard();
-                    flopper = cplot.getCards(flopCards);
+                    flopper = CPlot.getCards(flopCards);
 
                     flop1.setImageResource(R.drawable.b1fv);
                     flop2.setImageResource(R.drawable.b1fv);
@@ -137,7 +126,6 @@ public class MainActivity extends ActionBarActivity {
                     flop3.setImageResource(findPic(flopper[2]));
 
                     v.setTag(2);
-                    System.out.println("hi");
                 }
 
                 else if(status == 2) {
@@ -227,14 +215,10 @@ public class MainActivity extends ActionBarActivity {
 
 
 
-    //On click event for deal
-    public void dealOnClick(View v) {
-        //Inform the user the button 1 has been clicked
-        Toast.makeText(this, "Button 1 clicked.", Toast.LENGTH_SHORT).show();
-    }
+
 
     public List<Integer> shuffleCards() {
-        ArrayList<Integer> deck = new ArrayList<Integer>();
+        ArrayList<Integer> deck = new ArrayList<>();
         for (int i = 0; i <52; i++) {
             deck.add(i);
         }
@@ -271,11 +255,11 @@ public class MainActivity extends ActionBarActivity {
         return allHands;
     }
 
-    public void loader(AssetManager asset, Eva tempeva) {
+    public void loader(AssetManager asset) {
         try {
 
             InputStream input = asset.open("nonflush.ser");
-            tempeva.loadEnumHands(input);
+            Eva.loadEnumHands(input);
 
         } catch (IOException e) {
             e.printStackTrace();
