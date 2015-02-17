@@ -137,6 +137,7 @@ public class MainActivity extends ActionBarActivity {
                     flop3.setImageResource(findPic(flopper[2]));
 
                     v.setTag(2);
+                    System.out.println("hi");
                 }
 
                 else if(status == 2) {
