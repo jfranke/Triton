@@ -9,35 +9,6 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="opHand"
-        android:id="@+id/opHand"
-        android:layout_marginTop="45dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="myHand"
-        android:id="@+id/myHand"
-        android:layout_alignParentBottom="true"
-        android:layout_alignLeft="@+id/opHand"
-        android:layout_alignStart="@+id/opHand" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Deal"
-        android:id="@+id/deal"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginRight="31dp"
-        android:layout_marginEnd="31dp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:text="cards"
         android:id="@+id/cards"
         android:layout_below="@+id/winner"
@@ -49,9 +20,7 @@
         android:layout_height="wrap_content"
         android:text="who wins"
         android:id="@+id/winner"
-        android:layout_below="@+id/p2c2"
-        android:layout_alignLeft="@+id/deal"
-        android:layout_alignStart="@+id/deal" />
+        android:layout_below="@+id/p2c2" />
 
 
     <ImageView
@@ -60,7 +29,6 @@
         android:id="@+id/p1c1"
         android:visibility="visible"
         android:src="@drawable/b1fv"
-        android:layout_above="@+id/myHand"
         android:layout_toStartOf="@+id/cards"
         android:layout_toLeftOf="@+id/cards" />
 
@@ -69,7 +37,6 @@
         android:layout_height="wrap_content"
         android:id="@+id/p1c2"
         android:src="@drawable/b1fv"
-        android:layout_above="@+id/myHand"
         android:layout_toRightOf="@+id/cards"
         android:layout_toEndOf="@+id/cards" />
 
@@ -115,8 +82,7 @@
         android:id="@+id/flop3"
         android:src="@drawable/b1fv"
         android:layout_alignBottom="@+id/cards"
-        android:layout_alignLeft="@+id/opHand"
-        android:layout_alignStart="@+id/opHand" />
+        android:layout_centerHorizontal="true" />
 
     <ImageView
         android:layout_width="wrap_content"
@@ -135,6 +101,46 @@
         android:layout_toRightOf="@+id/turn"
         android:layout_toEndOf="@+id/turn"
         android:src="@drawable/b1fv" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="1000"
+        android:id="@+id/playerMoney"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@+id/p1c1"
+        android:layout_toStartOf="@+id/p1c1" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Player Name"
+        android:id="@+id/playerID"
+        android:layout_alignBottom="@+id/deal"
+        android:layout_toLeftOf="@+id/p1c1"
+        android:layout_toStartOf="@+id/p1c1"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="1000"
+        android:id="@+id/aiMoney"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@+id/p2c1"
+        android:layout_toStartOf="@+id/p2c1" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Deal"
+        android:id="@+id/deal"
+        android:layout_alignTop="@+id/p1c1"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>
 

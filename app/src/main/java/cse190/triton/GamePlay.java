@@ -21,7 +21,9 @@ package cse190.triton;
 
         import android.widget.ImageView;
 
+
         import static cse190.triton.NikiConstants.*;
+
 
 
 public class GamePlay extends ActionBarActivity {
@@ -32,13 +34,22 @@ public class GamePlay extends ActionBarActivity {
         setContentView(R.layout.activity_game_play);
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        final TextView myHand = (TextView) findViewById(R.id.myHand);
-        final TextView opHand = (TextView) findViewById(R.id.opHand);
-        final TextView cards = (TextView) findViewById(R.id.cards);
         final TextView winner = (TextView) findViewById(R.id.winner);
         final Button testButton = (Button) findViewById(R.id.deal);
 
-        //pictres setup for players
+        //setting up player id and money
+        final TextView playerID = (TextView) findViewById(R.id.playerID);
+        final TextView playerMoney = (TextView) findViewById(R.id.playerMoney);
+        final TextView aiMoney = (TextView) findViewById(R.id.aiMoney);
+        playerID.setText("Player 1");
+        updateMoneyUI(playerMoney, aiMoney);
+
+        //setting up the pot
+        final TextView pot = (TextView) findViewById(R.id.pot);
+        //ante is starting money / 100
+        final int ante = (Integer.parseInt(Settings.getMoney("ai")) / 100);
+
+        //pictures setup for players
         final ImageView p1c1 = (ImageView) findViewById(R.id.p1c1);
         final ImageView p1c2 = (ImageView) findViewById(R.id.p1c2);
         final ImageView p2c1 = (ImageView) findViewById(R.id.p2c1);
@@ -54,20 +65,17 @@ public class GamePlay extends ActionBarActivity {
         final ImageView river = (ImageView) findViewById(R.id.river);
 
         //load all possible outcomes
-        //final Eva eva = new Eva();
         final AssetManager assetManager = getAssets();
         loader(assetManager);
 
-        myHand.setText("");
-        opHand.setText("");
-        cards.setText("");
         winner.setText("");
 
 
         testButton.setTag(0);
         testButton.setOnClickListener(new View.OnClickListener() {
             //variables
-            int numPlayers = 2;
+            int numPlayers = Settings.getNumPlayers();
+            int potValue = 0;
 
             //random numbers for the decks
             List<Integer> deck = shuffleCards();
@@ -86,7 +94,6 @@ public class GamePlay extends ActionBarActivity {
                 //status for dealing everyone hand
                 if(status == 0) {
 
-                    cards.setText("");
                     winner.setText("");
                     testButton.setText("Show Flop");
                     v.setTag(1);
@@ -107,19 +114,16 @@ public class GamePlay extends ActionBarActivity {
                     turn.setImageResource(R.drawable.b1fv);
                     river.setImageResource(R.drawable.b1fv);
 
-                    //set text boxs
+                    //setting up ante for pot and subtracting from both players
+                    subAnte(playerMoney, aiMoney, ante);
 
-                    /*myHand.setText("Player 1: " + cplot.getStr(allHands[0].hCards));
-                    opHand.setText("Player 2: " + cplot.getStr(allHands[1].hCards));*/
+                    pot.setText(String.valueOf(ante * Settings.getNumPlayers()));
+                    potValue = ante * Settings.getNumPlayers();
 
 
                 }
 
                 else if(status == 1) {
-
-                    /*cards.setText(flopper[0] + " "
-                            + flopper[1] + " "
-                            + flopper[2]);*/
 
                     testButton.setText("Show Turn");
                     flop1.setImageResource(findPic(flopper[0]));
@@ -130,10 +134,6 @@ public class GamePlay extends ActionBarActivity {
                 }
 
                 else if(status == 2) {
-                    /*cards.setText(flopper[0] + " "
-                            + flopper[1] + " "
-                            + flopper[2] + " "
-                            + flopper[3]);*/
 
                     testButton.setText("Show River");
                     turn.setImageResource(findPic(flopper[3]));
@@ -141,11 +141,6 @@ public class GamePlay extends ActionBarActivity {
                 }
 
                 else {
-                    /*cards.setText(flopper[0] + " "
-                            + flopper[1] + " "
-                            + flopper[2] + " "
-                            + flopper[3] + " "
-                            + flopper[4]);*/
 
                     river.setImageResource(findPic(flopper[4]));
                     testButton.setText("Deal");
@@ -177,10 +172,14 @@ public class GamePlay extends ActionBarActivity {
                         winner.setText("It's a tie!");
                     }
 
+                    addWinner(playerMoney, aiMoney, winningHand, potValue);
+
                     //resets everything for next game
                     deck = shuffleCards();
                     bitDeck = new Deck();
                     allHands = new Hand[numPlayers];
+                    pot.setText("0");
+                    potValue = 0;
 
 
 
@@ -267,6 +266,33 @@ public class GamePlay extends ActionBarActivity {
 
         }
 
+    }
+
+    public void updateMoneyUI(TextView player, TextView ai) {
+          player.setText(Settings.getMoney("Player 1"));
+          ai.setText(Settings.getMoney("ai"));
+    }
+
+    public void subAnte(TextView player, TextView ai, int ante) {
+        Settings.subMoney("ai", ante);
+        Settings.subMoney("Player 1", ante);
+        updateMoneyUI(player, ai);
+    }
+
+    public void addWinner(TextView player, TextView ai, int winner, int pot) {
+        if(winner == 0) {
+            Settings.addMoney("Player1", pot);
+        }
+
+        else if (winner == -1) {
+            Settings.addMoney("Player1", pot/2);
+            Settings.addMoney("ai", pot/2);
+        }
+        else {
+            Settings.addMoney("ai", pot);
+        }
+
+        updateMoneyUI(player, ai);
     }
 
     public int findPic(String cardStr) {
