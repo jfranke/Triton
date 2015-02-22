@@ -3,8 +3,9 @@ package cse190.triton;
 public class Settings {
 
     static int numPlayers = 0;
-    static String aiMoney = "100";
-    static String playerMoney = "100";
+    static String aiMoney = "0";
+    static String playerMoney = "0";
+    static String userID = "";
 
     public static int getNumPlayers() {
         return numPlayers;
@@ -12,6 +13,12 @@ public class Settings {
 
     public static void setNumPlayers(int x) {
         numPlayers = x;
+    }
+
+    public static String getUserID() {return userID;}
+
+    public static void setUserID(String id) {
+        userID = id;
     }
 
     public static String getMoney(String id) {

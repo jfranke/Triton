@@ -27,6 +27,9 @@ package cse190.triton;
 
 
 public class GamePlay extends ActionBarActivity {
+    final String userID = Settings.getUserID();
+    TextView playerMoney;
+    TextView aiMoney;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,10 +42,11 @@ public class GamePlay extends ActionBarActivity {
 
         //setting up player id and money
         final TextView playerID = (TextView) findViewById(R.id.playerID);
-        final TextView playerMoney = (TextView) findViewById(R.id.playerMoney);
-        final TextView aiMoney = (TextView) findViewById(R.id.aiMoney);
-        playerID.setText("Player 1");
-        updateMoneyUI(playerMoney, aiMoney);
+        playerMoney = (TextView) findViewById(R.id.playerMoney);
+        aiMoney = (TextView) findViewById(R.id.aiMoney);
+
+        playerID.setText(userID);
+        updateMoneyUI();
 
         //setting up the pot
         final TextView pot = (TextView) findViewById(R.id.pot);
@@ -115,7 +119,7 @@ public class GamePlay extends ActionBarActivity {
                     river.setImageResource(R.drawable.b1fv);
 
                     //setting up ante for pot and subtracting from both players
-                    subAnte(playerMoney, aiMoney, ante);
+                    subAnte(ante);
 
                     pot.setText(String.valueOf(ante * Settings.getNumPlayers()));
                     potValue = ante * Settings.getNumPlayers();
@@ -166,13 +170,19 @@ public class GamePlay extends ActionBarActivity {
                         }
                     }
                     if(winningHand >= 0){
-                        winner.setText("Player " + Integer.toString(winningHand+1) + " Wins!");
+                        if (winningHand == 0) {
+                            winner.setText(userID + " Wins!");
+                        }
+
+                        else {
+                            winner.setText("AI" +" Wins!");
+                        }
                     }
                     else {
                         winner.setText("It's a tie!");
                     }
 
-                    addWinner(playerMoney, aiMoney, winningHand, potValue);
+                    addWinner(winningHand, potValue);
 
                     //resets everything for next game
                     deck = shuffleCards();
@@ -268,31 +278,31 @@ public class GamePlay extends ActionBarActivity {
 
     }
 
-    public void updateMoneyUI(TextView player, TextView ai) {
-          player.setText(Settings.getMoney("Player 1"));
-          ai.setText(Settings.getMoney("ai"));
+    public void updateMoneyUI() {
+          playerMoney.setText(Settings.getMoney("Player 1"));
+          aiMoney.setText(Settings.getMoney("ai"));
     }
 
-    public void subAnte(TextView player, TextView ai, int ante) {
+    public void subAnte( int ante) {
         Settings.subMoney("ai", ante);
         Settings.subMoney("Player 1", ante);
-        updateMoneyUI(player, ai);
+        updateMoneyUI();
     }
 
-    public void addWinner(TextView player, TextView ai, int winner, int pot) {
+    public void addWinner(int winner, int pot) {
         if(winner == 0) {
-            Settings.addMoney("Player1", pot);
+            Settings.addMoney(userID, pot);
         }
 
         else if (winner == -1) {
-            Settings.addMoney("Player1", pot/2);
+            Settings.addMoney(userID, pot/2);
             Settings.addMoney("ai", pot/2);
         }
         else {
             Settings.addMoney("ai", pot);
         }
 
-        updateMoneyUI(player, ai);
+        updateMoneyUI();
     }
 
     public int findPic(String cardStr) {

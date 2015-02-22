@@ -8,10 +8,9 @@
 
     <TextView android:text="Select your options" android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:id="@+id/textview"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="60dp"
-        android:id="@+id/textview" />
+        android:layout_centerHorizontal="true" />
 
     <Spinner
         android:id="@+id/spinner1"
@@ -51,11 +50,11 @@
         android:inputType="number"
         android:ems="10"
         android:id="@+id/startingMoney"
-        android:layout_alignTop="@+id/spinner1"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
         android:autoText="false"
-        android:hint="Greater than 1000" />
+        android:hint="Greater than 1000"
+        android:layout_above="@+id/play"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -64,7 +63,26 @@
         android:text="Money to Start"
         android:id="@+id/money"
         android:layout_above="@+id/startingMoney"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Username"
+        android:id="@+id/ID"
+        android:layout_alignTop="@+id/players"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/userID"
+        android:layout_below="@+id/ID"
+        android:layout_alignRight="@+id/ID"
+        android:layout_alignEnd="@+id/ID"
+        android:hint="Name to be called" />
 
 </RelativeLayout>

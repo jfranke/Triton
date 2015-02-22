@@ -32,6 +32,7 @@ public class OptionActivity extends ActionBarActivity {
 
         //value of money
         final EditText startingMoney = (EditText)findViewById(R.id.startingMoney);
+        final EditText userID = (EditText)findViewById(R.id.userID);
 
         final Button play = (Button) findViewById(R.id.play);
 
@@ -40,7 +41,13 @@ public class OptionActivity extends ActionBarActivity {
 
             public void onClick(View v) {
                 String tempMoney = startingMoney.getText().toString();
-                if(tempMoney.isEmpty()) {
+                String tempID = userID.getText().toString();
+
+                if(tempID.isEmpty()) {
+                    Toast.makeText(getApplicationContext(), "Please state a username",
+                            Toast.LENGTH_SHORT).show();
+                }
+                else if(tempMoney.isEmpty()) {
                     Toast.makeText(getApplicationContext(), "Starting money is too low. Please pick a number greater than 1000.",
                             Toast.LENGTH_SHORT).show();
                 }
@@ -53,6 +60,7 @@ public class OptionActivity extends ActionBarActivity {
                 else {
                     Settings.setNumPlayers(tempPlayers);
                     Settings.setStartingMoney(tempMoney);
+                    Settings.setUserID(tempID);
                     startGame(v);
                 }
             }
