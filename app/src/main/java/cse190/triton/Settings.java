@@ -57,6 +57,7 @@ public class Settings {
         else {
             playerMoney = String.valueOf(Integer.parseInt(playerMoney) + amount);
             return playerMoney;
+
         }
     }
 }
