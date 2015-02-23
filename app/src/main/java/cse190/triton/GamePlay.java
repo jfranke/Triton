@@ -121,7 +121,7 @@ public class GamePlay extends ActionBarActivity {
                     //setting up ante for pot and subtracting from both players
                     subAnte(ante);
 
-                    pot.setText(String.valueOf(ante * Settings.getNumPlayers()));
+                    pot.setText("pot: " + String.valueOf(ante * Settings.getNumPlayers()));
                     potValue = ante * Settings.getNumPlayers();
 
 
@@ -188,7 +188,7 @@ public class GamePlay extends ActionBarActivity {
                     deck = shuffleCards();
                     bitDeck = new Deck();
                     allHands = new Hand[numPlayers];
-                    pot.setText("0");
+                    pot.setText("pot: 0");
                     potValue = 0;
 
 
