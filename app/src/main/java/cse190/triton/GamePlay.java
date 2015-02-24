@@ -16,8 +16,9 @@ package cse190.triton;
         import java.util.List;
         import java.util.ArrayList;
         import java.util.Collections;
+        import android.os.Handler;
+
         import android.widget.Button;
-        import android.content.pm.ActivityInfo;
 
         import android.widget.ImageView;
 
@@ -28,17 +29,50 @@ package cse190.triton;
 
 public class GamePlay extends ActionBarActivity {
     final String userID = Settings.getUserID();
+    final int numPlayers = Settings.getNumPlayers();
+
+    //global textview for moneys
     TextView playerMoney;
     TextView aiMoney;
+    int potValue = 0;
+    final int ante = ((Integer.parseInt(Settings.getMoney("ai"))) / 100);
+
+
+    //other textviews
+    TextView winner;
+    TextView pot;
+
+    //pictures setup for players
+    ImageView p1c1;
+    ImageView p1c2;
+    ImageView p2c1;
+    ImageView p2c2;
+
+    //pictures for flop,turn,river
+    ImageView flop1;
+    ImageView flop2;
+    ImageView flop3;
+    ImageView turn;
+    ImageView river;
+    ImageView[] picHands = new ImageView[4];
+
+    List<Integer> deck = shuffleCards();
+    Deck bitDeck = new Deck();
+    Hand[] allHands =  new Hand[numPlayers];
+
+    Handler myHandler;
+
+    Button testButton;
+    Button foldButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_play);
 
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        final TextView winner = (TextView) findViewById(R.id.winner);
-        final Button testButton = (Button) findViewById(R.id.deal);
+        winner = (TextView) findViewById(R.id.winner);
+        testButton = (Button) findViewById(R.id.deal);
+        foldButton = (Button) findViewById(R.id.fold);
 
         //setting up player id and money
         final TextView playerID = (TextView) findViewById(R.id.playerID);
@@ -49,24 +83,29 @@ public class GamePlay extends ActionBarActivity {
         updateMoneyUI();
 
         //setting up the pot
-        final TextView pot = (TextView) findViewById(R.id.pot);
+        pot = (TextView) findViewById(R.id.pot);
         //ante is starting money / 100
-        final int ante = (Integer.parseInt(Settings.getMoney("ai")) / 100);
 
         //pictures setup for players
-        final ImageView p1c1 = (ImageView) findViewById(R.id.p1c1);
-        final ImageView p1c2 = (ImageView) findViewById(R.id.p1c2);
-        final ImageView p2c1 = (ImageView) findViewById(R.id.p2c1);
-        final ImageView p2c2 = (ImageView) findViewById(R.id.p2c2);
+        p1c1 = (ImageView) findViewById(R.id.p1c1);
+        p1c2 = (ImageView) findViewById(R.id.p1c2);
+        p2c1 = (ImageView) findViewById(R.id.p2c1);
+        p2c2 = (ImageView) findViewById(R.id.p2c2);
 
-        final ImageView[] picHands = {p1c1,p1c2,p2c1,p2c2};
+        picHands[0] = p1c1;
+        picHands[1] = p1c2;
+        picHands[2] = p2c1;
+        picHands[3] = p2c2;
 
         //pictures for flop,turn,river
-        final ImageView flop1 = (ImageView) findViewById(R.id.flop1);
-        final ImageView flop2 = (ImageView) findViewById(R.id.flop2);
-        final ImageView flop3 = (ImageView) findViewById(R.id.flop3);
-        final ImageView turn = (ImageView) findViewById(R.id.turn);
-        final ImageView river = (ImageView) findViewById(R.id.river);
+        flop1 = (ImageView) findViewById(R.id.flop1);
+        flop2 = (ImageView) findViewById(R.id.flop2);
+        flop3 = (ImageView) findViewById(R.id.flop3);
+        turn = (ImageView) findViewById(R.id.turn);
+        river = (ImageView) findViewById(R.id.river);
+
+        myHandler = new Handler();
+
 
         //load all possible outcomes
         final AssetManager assetManager = getAssets();
@@ -76,81 +115,53 @@ public class GamePlay extends ActionBarActivity {
 
 
         testButton.setTag(0);
+        startOver();
+
+        foldButton.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v) {
+                testButton.setTag(0);
+                addWinner(1);
+                pot.setText("pot: 0");
+                startOver();
+
+            }
+        });
+
         testButton.setOnClickListener(new View.OnClickListener() {
-            //variables
-            int numPlayers = Settings.getNumPlayers();
-            int potValue = 0;
-
-            //random numbers for the decks
-            List<Integer> deck = shuffleCards();
-
-            //init all the classes.
-            Deck bitDeck = new Deck();
-            //CPlot cplot = new CPlot();
-            Hand[] allHands = new Hand[numPlayers];
 
             String[] flopper;
-
 
             public void onClick( View v) {
                 final int status = (int) v.getTag();
 
-                //status for dealing everyone hand
-                if(status == 0) {
+                //betting on initial hands
 
-                    winner.setText("");
-                    testButton.setText("Show Flop");
-                    v.setTag(1);
-
-                    //sets all hands and their pictures
-                    for (int n = 0; n < numPlayers; n++) {
-                        allHands = setHands(n, deck,bitDeck, allHands, picHands);
-                    }
-
+                 if(status == 0) {
                     //get all 5 cards for holdem
                     bitDeck.enumRandom();
                     long flopCards = bitDeck.getBoard();
                     flopper = CPlot.getCards(flopCards);
 
-                    flop1.setImageResource(R.drawable.b1fv);
-                    flop2.setImageResource(R.drawable.b1fv);
-                    flop3.setImageResource(R.drawable.b1fv);
-                    turn.setImageResource(R.drawable.b1fv);
-                    river.setImageResource(R.drawable.b1fv);
-
-                    //setting up ante for pot and subtracting from both players
-                    subAnte(ante);
-
-                    pot.setText("pot: " + String.valueOf(ante * Settings.getNumPlayers()));
-                    potValue = ante * Settings.getNumPlayers();
-
-
-                }
-
-                else if(status == 1) {
-
-                    testButton.setText("Show Turn");
                     flop1.setImageResource(findPic(flopper[0]));
                     flop2.setImageResource(findPic(flopper[1]));
                     flop3.setImageResource(findPic(flopper[2]));
 
-                    v.setTag(2);
+                    v.setTag(1);
                 }
 
-                else if(status == 2) {
+                else if(status == 1) {
 
-                    testButton.setText("Show River");
                     turn.setImageResource(findPic(flopper[3]));
-                    v.setTag(3);
+                    v.setTag(2);
                 }
 
                 else {
 
                     river.setImageResource(findPic(flopper[4]));
-                    testButton.setText("Deal");
                     v.setTag(0);
 
                     int[] hValues = new int[numPlayers];
+
                     for(int j = 0; j < numPlayers; j++) {
                         hValues[j] = Eva.getValue(bitDeck.keysBoard[0] * allHands[j].hKey,
                                 bitDeck.handsBoard[0] | allHands[j].hCards);
@@ -182,7 +193,7 @@ public class GamePlay extends ActionBarActivity {
                         winner.setText("It's a tie!");
                     }
 
-                    addWinner(winningHand, potValue);
+                    addWinner(winningHand);
 
                     //resets everything for next game
                     deck = shuffleCards();
@@ -191,7 +202,7 @@ public class GamePlay extends ActionBarActivity {
                     pot.setText("pot: 0");
                     potValue = 0;
 
-
+                    startOver();
 
                 }
 
@@ -238,16 +249,16 @@ public class GamePlay extends ActionBarActivity {
     }
 
 
-    public Hand[] setHands(int player, List<Integer> intDeck, Deck bitDeck,  Hand[] allHands, ImageView[] pics) {
+    public void setHands(int player) {
         long tempLong = 0;
 
         //finds bit mask for cards
         for(int m = player * 2; m < (player * 2) + 2; m++) {
             int temp = 0;
             for (int i = 0; i < DECK_STRINGS.length - 1; i++) {
-                if (DECK_STRINGS[intDeck.get(m)].equals(DECK_STRINGS[i])) {
+                if (DECK_STRINGS[deck.get(m)].equals(DECK_STRINGS[i])) {
                     temp = i;
-                    pics[m].setImageResource(findPic(DECK_STRINGS[i]));
+                    picHands[m].setImageResource(findPic(DECK_STRINGS[i]));
                     break;
                 }
             }
@@ -260,9 +271,6 @@ public class GamePlay extends ActionBarActivity {
         allHands[player] = new Hand(tempLong);
         bitDeck.removeCards(allHands[player].hCards);
 
-
-
-        return allHands;
     }
 
     public void loader(AssetManager asset) {
@@ -278,6 +286,43 @@ public class GamePlay extends ActionBarActivity {
 
     }
 
+    public void startOver() {
+
+        testButton.setEnabled(false);
+        foldButton.setEnabled(false);
+        myHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                winner.setText("");
+
+                //sets all hands and their pictures
+                for (int n = 0; n < numPlayers; n++) {
+                    setHands(n);
+                }
+
+
+                flop1.setImageResource(R.drawable.b1fv);
+                flop2.setImageResource(R.drawable.b1fv);
+                flop3.setImageResource(R.drawable.b1fv);
+                turn.setImageResource(R.drawable.b1fv);
+                river.setImageResource(R.drawable.b1fv);
+
+                //setting up ante for pot and subtracting from both players
+                System.out.println("ante is: " + ante);
+                subAnte(ante);
+
+                pot.setText("pot: " + String.valueOf(ante * numPlayers));
+                potValue = ante * numPlayers;
+
+                deck = shuffleCards();
+                bitDeck = new Deck();
+                testButton.setEnabled(true);
+                foldButton.setEnabled(true);
+            }
+        },5000);
+
+    }
+
     public void updateMoneyUI() {
           playerMoney.setText(Settings.getMoney("Player 1"));
           aiMoney.setText(Settings.getMoney("ai"));
@@ -289,21 +334,23 @@ public class GamePlay extends ActionBarActivity {
         updateMoneyUI();
     }
 
-    public void addWinner(int winner, int pot) {
+    public void addWinner(int winner) {
         if(winner == 0) {
-            Settings.addMoney(userID, pot);
+            Settings.addMoney(userID, potValue);
         }
 
         else if (winner == -1) {
-            Settings.addMoney(userID, pot/2);
-            Settings.addMoney("ai", pot/2);
+            Settings.addMoney(userID, potValue/2);
+            Settings.addMoney("ai", potValue/2);
         }
         else {
-            Settings.addMoney("ai", pot);
+            Settings.addMoney("ai", potValue);
         }
 
         updateMoneyUI();
     }
+
+
 
     public int findPic(String cardStr) {
 

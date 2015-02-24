@@ -2,7 +2,7 @@ package cse190.triton;
 
 public class Settings {
 
-    static int numPlayers = 0;
+    static int numPlayers = 2;
     static String aiMoney = "0";
     static String playerMoney = "0";
     static String userID = "";
