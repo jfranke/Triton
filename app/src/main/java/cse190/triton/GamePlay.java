@@ -6,6 +6,7 @@ package cse190.triton;
         import android.view.Menu;
         import android.view.MenuItem;
         import android.view.View;
+        import android.widget.EditText;
         import android.widget.TextView;
 
         import android.content.res.AssetManager;
@@ -21,6 +22,7 @@ package cse190.triton;
         import android.widget.Button;
 
         import android.widget.ImageView;
+        import android.widget.Toast;
 
 
         import static cse190.triton.NikiConstants.*;
@@ -64,6 +66,13 @@ public class GamePlay extends ActionBarActivity {
 
     Button testButton;
     Button foldButton;
+    Button raiseButton;
+
+    EditText raiseValue;
+    int raisePot;
+    String[] flopper;
+
+    boolean finishGame = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,17 +82,21 @@ public class GamePlay extends ActionBarActivity {
         winner = (TextView) findViewById(R.id.winner);
         testButton = (Button) findViewById(R.id.deal);
         foldButton = (Button) findViewById(R.id.fold);
+        raiseButton = (Button) findViewById(R.id.raise);
+
+        raiseValue = (EditText)findViewById(R.id.raiseValue);
 
         //setting up player id and money
         final TextView playerID = (TextView) findViewById(R.id.playerID);
         playerMoney = (TextView) findViewById(R.id.playerMoney);
         aiMoney = (TextView) findViewById(R.id.aiMoney);
+        pot = (TextView) findViewById(R.id.pot);
 
         playerID.setText(userID);
         updateMoneyUI();
 
         //setting up the pot
-        pot = (TextView) findViewById(R.id.pot);
+
         //ante is starting money / 100
 
         //pictures setup for players
@@ -119,9 +132,8 @@ public class GamePlay extends ActionBarActivity {
 
         foldButton.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v) {
-                testButton.setTag(0);
                 addWinner(1);
-                pot.setText("pot: 0");
+                pot.setText("pot: " + potValue);
                 startOver();
 
             }
@@ -129,18 +141,12 @@ public class GamePlay extends ActionBarActivity {
 
         testButton.setOnClickListener(new View.OnClickListener() {
 
-            String[] flopper;
-
             public void onClick( View v) {
                 final int status = (int) v.getTag();
 
                 //betting on initial hands
 
                  if(status == 0) {
-                    //get all 5 cards for holdem
-                    bitDeck.enumRandom();
-                    long flopCards = bitDeck.getBoard();
-                    flopper = CPlot.getCards(flopCards);
 
                     flop1.setImageResource(findPic(flopper[0]));
                     flop2.setImageResource(findPic(flopper[1]));
@@ -155,58 +161,72 @@ public class GamePlay extends ActionBarActivity {
                     v.setTag(2);
                 }
 
+                else if (status == 2) {
+
+                     river.setImageResource(findPic(flopper[4]));
+                     v.setTag(3);
+                }
+
                 else {
-
-                    river.setImageResource(findPic(flopper[4]));
-                    v.setTag(0);
-
-                    int[] hValues = new int[numPlayers];
-
-                    for(int j = 0; j < numPlayers; j++) {
-                        hValues[j] = Eva.getValue(bitDeck.keysBoard[0] * allHands[j].hKey,
-                                bitDeck.handsBoard[0] | allHands[j].hCards);
-                    }
-
-                    int winningHand = 0;
-                    int winningValue = 0;
-                    for(int k = 0; k < numPlayers; k++) {
-                        if(hValues[k] >= winningValue) {
-                            //check for tie
-                            if(winningValue == hValues[k]) {
-                                winningHand = -1;
-                            } else {
-                                winningValue = hValues[k];
-                                winningHand = k;
-                            }
-                        }
-                    }
-                    if(winningHand >= 0){
-                        if (winningHand == 0) {
-                            winner.setText(userID + " Wins!");
-                        }
-
-                        else {
-                            winner.setText("AI" +" Wins!");
-                        }
-                    }
-                    else {
-                        winner.setText("It's a tie!");
-                    }
-
-                    addWinner(winningHand);
-
-                    //resets everything for next game
-                    deck = shuffleCards();
-                    bitDeck = new Deck();
-                    allHands = new Hand[numPlayers];
-                    pot.setText("pot: 0");
-                    potValue = 0;
-
+                   figureOutWinner();
                     startOver();
 
                 }
 
             }
+        });
+
+
+        raiseButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                final int status = (int) testButton.getTag();
+                raisePot = Integer.parseInt(raiseValue.getText().toString());
+                //betting on initial hands
+
+                if (status == 0) {
+                    //get all 5 cards for holdem
+                    if(checkRaise(raisePot)) {
+
+                        flop1.setImageResource(findPic(flopper[0]));
+                        flop2.setImageResource(findPic(flopper[1]));
+                        flop3.setImageResource(findPic(flopper[2]));
+                        testButton.setTag(1);
+
+                        doRaise();
+                    }
+
+
+
+                } else if (status == 1) {
+                    if(checkRaise(raisePot)) {
+                        turn.setImageResource(findPic(flopper[3]));
+                        testButton.setTag(2);
+                        doRaise();
+                    }
+                } else if (status == 2) {
+
+                    if (checkRaise(raisePot)) {
+                        river.setImageResource(findPic(flopper[4]));
+                        testButton.setTag(3);
+                        doRaise();
+                    }
+                }
+                else {
+                    if(checkRaise(raisePot)) {
+                        doRaise();
+                        figureOutWinner();
+                        startOver();
+                    }
+                }
+
+                if(finishGame) {
+                    finishGame = false;
+                    doEverything();
+                }
+
+            }
+
+
         });
 
     }
@@ -287,9 +307,10 @@ public class GamePlay extends ActionBarActivity {
     }
 
     public void startOver() {
-
+        testButton.setTag(0);
         testButton.setEnabled(false);
         foldButton.setEnabled(false);
+        raiseButton.setEnabled(false);
         myHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -308,7 +329,6 @@ public class GamePlay extends ActionBarActivity {
                 river.setImageResource(R.drawable.b1fv);
 
                 //setting up ante for pot and subtracting from both players
-                System.out.println("ante is: " + ante);
                 subAnte(ante);
 
                 pot.setText("pot: " + String.valueOf(ante * numPlayers));
@@ -316,22 +336,33 @@ public class GamePlay extends ActionBarActivity {
 
                 deck = shuffleCards();
                 bitDeck = new Deck();
+
+                bitDeck.enumRandom();
+                long flopCards = bitDeck.getBoard();
+                flopper = CPlot.getCards(flopCards);
                 testButton.setEnabled(true);
                 foldButton.setEnabled(true);
+                raiseButton.setEnabled(true);
             }
         },5000);
 
     }
 
     public void updateMoneyUI() {
-          playerMoney.setText(Settings.getMoney("Player 1"));
-          aiMoney.setText(Settings.getMoney("ai"));
+        playerMoney.setText(Settings.getMoney("Player 1"));
+        aiMoney.setText(Settings.getMoney("ai"));
+        pot.setText("pot: " + potValue);
     }
 
     public void subAnte( int ante) {
         Settings.subMoney("ai", ante);
         Settings.subMoney("Player 1", ante);
         updateMoneyUI();
+    }
+
+    public void subMoney(String id) {
+        Settings.subMoney(id, raisePot);
+        potValue = potValue + raisePot;
     }
 
     public void addWinner(int winner) {
@@ -350,7 +381,83 @@ public class GamePlay extends ActionBarActivity {
         updateMoneyUI();
     }
 
+    public boolean checkRaise(int raise) {
+        if (raise > Settings.getIntMoney(Settings.getUserID()) ) {
+            Toast.makeText(getApplicationContext(), "Raise amount is higher than you have. Max bet is " + Integer.parseInt(Settings.getMoney(Settings.getUserID())),
+                    Toast.LENGTH_SHORT).show();
 
+            return false;
+        }
+
+        else if(raise <= 0) {
+            Toast.makeText(getApplicationContext(), "You must raise more than 0",
+                    Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        if (raisePot > Settings.getIntMoney("ai")) {
+            raisePot = Settings.getIntMoney("ai");
+        }
+
+        return true;
+    }
+
+    public void doRaise() {
+        subMoney("ai");
+        subMoney(Settings.getUserID());
+        raisePot = 0;
+
+        if(Settings.getIntMoney("ai") == 0 || Settings.getIntMoney(Settings.getUserID()) == 0) {
+            testButton.setEnabled(false);
+            foldButton.setEnabled(false);
+            raiseButton.setEnabled(false);
+            finishGame = true;
+        }
+        updateMoneyUI();
+
+    }
+
+    public void doEverything() {
+        turn.setImageResource(findPic(flopper[3]));
+        river.setImageResource(findPic(flopper[4]));
+
+        figureOutWinner();
+        testButton.setTag(0);
+        startOver();
+    }
+
+    public void figureOutWinner() {
+        int[] hValues = new int[numPlayers];
+
+        for (int j = 0; j < numPlayers; j++) {
+            hValues[j] = Eva.getValue(bitDeck.keysBoard[0] * allHands[j].hKey,
+                    bitDeck.handsBoard[0] | allHands[j].hCards);
+        }
+
+        int winningHand = 0;
+        int winningValue = 0;
+        for (int k = 0; k < numPlayers; k++) {
+            if (hValues[k] >= winningValue) {
+                //check for tie
+                if (winningValue == hValues[k]) {
+                    winningHand = -1;
+                } else {
+                    winningValue = hValues[k];
+                    winningHand = k;
+                }
+            }
+        }
+        if (winningHand >= 0) {
+            if (winningHand == 0) {
+                winner.setText(userID + " Wins!");
+            } else {
+                winner.setText("AI" + " Wins!");
+            }
+        } else {
+            winner.setText("It's a tie!");
+        }
+        addWinner(winningHand);
+    }
 
     public int findPic(String cardStr) {
 

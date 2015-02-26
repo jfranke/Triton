@@ -31,6 +31,16 @@ public class Settings {
         }
     }
 
+    public static int getIntMoney(String id) {
+        if(id.equals("ai")) {
+            return Integer.parseInt(aiMoney);
+        }
+
+        else {
+            return Integer.parseInt(playerMoney);
+        }
+    }
+
     public static void setStartingMoney(String y) {
         aiMoney = y;
         playerMoney = y;
