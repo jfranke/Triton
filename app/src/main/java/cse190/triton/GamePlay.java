@@ -92,7 +92,7 @@ public class GamePlay extends ActionBarActivity {
     LinearLayout mainLayout;
 
 
-    Ai ai;
+    AiRate ai;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -530,7 +530,7 @@ public class GamePlay extends ActionBarActivity {
                         setHands(n);
                     }
 
-                    ai = new Ai(allHands[1].getStrHand());
+                    ai = new AiRate(allHands[1].getStrHand());
                     Grader teacher = new Grader(allHands[0].getStrHand());
                     grade.setText(teacher.returnGrade());
 
