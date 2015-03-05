@@ -81,6 +81,56 @@ public class Deck {
         }
     }
 
+    public void enumRandom(int temp) {
+        int count = 1;
+        int size = temp;
+        Long cards = 0L;
+        Long key = 0L;
+        Random r = new Random();
+        keysBoard = new long[count];
+        handsBoard = new long[count];
+
+        int x = 0;
+        long oldCards = 0L;
+        for(int i = 0; i < count; i++) {
+            cards = 0L;
+            key = 1L;
+            while(Long.bitCount(cards) != size) {
+                x = r.nextInt(deck.size());
+                oldCards = cards;
+                cards = cards | (Long) deck.get(x);
+                if(cards != oldCards)
+                    key = 1L * key * primes.get(x);
+            }
+            handsBoard[i] = cards;
+            keysBoard[i] = key;
+        }
+    }
+
+    public void enumRandom(int size, int count) {
+        Long cards = 0L;
+        Long key = 0L;
+        Random r = new Random();
+        keysBoard = new long[count];
+        handsBoard = new long[count];
+
+        int x = 0;
+        long oldCards = 0L;
+        for(int i = 0; i < count; i++) {
+            cards = 0L;
+            key = 1L;
+            while(Long.bitCount(cards) != size) {
+                x = r.nextInt(deck.size());
+                oldCards = cards;
+                cards = cards | (Long) deck.get(x);
+                if(cards != oldCards)
+                    key = 1L * key * primes.get(x);
+            }
+            handsBoard[i] = cards;
+            keysBoard[i] = key;
+        }
+    }
+
     public long getBoard() {
         return handsBoard[0];
     }

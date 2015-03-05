@@ -1,12 +1,18 @@
 
 package cse190.triton;
 
+        import android.content.Intent;
         import android.support.v7.app.ActionBarActivity;
         import android.os.Bundle;
+        import android.view.Gravity;
+        import android.view.LayoutInflater;
         import android.view.Menu;
         import android.view.MenuItem;
         import android.view.View;
         import android.widget.EditText;
+        import android.widget.ImageButton;
+        import android.widget.LinearLayout;
+        import android.widget.PopupWindow;
         import android.widget.TextView;
 
         import android.content.res.AssetManager;
@@ -17,12 +23,15 @@ package cse190.triton;
         import java.util.List;
         import java.util.ArrayList;
         import java.util.Collections;
+        import java.util.Random;
+
         import android.os.Handler;
 
         import android.widget.Button;
 
         import android.widget.ImageView;
         import android.widget.Toast;
+        import android.view.ViewGroup.LayoutParams;
 
 
         import static cse190.triton.NikiConstants.*;
@@ -43,6 +52,8 @@ public class GamePlay extends ActionBarActivity {
     //other textviews
     TextView winner;
     TextView pot;
+    TextView aiCommands;
+    TextView grade;
 
     //pictures setup for players
     ImageView p1c1;
@@ -67,22 +78,36 @@ public class GamePlay extends ActionBarActivity {
     Button testButton;
     Button foldButton;
     Button raiseButton;
+    ImageButton infoButton;
 
     EditText raiseValue;
     int raisePot;
+    int aiRaisePot;
+    int numCallers = 0;
     String[] flopper;
 
     boolean finishGame = false;
+
+    LinearLayout layout;
+    LinearLayout mainLayout;
+
+
+    Ai ai;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_play);
 
+        //setting up popup window
+        layout = new LinearLayout(this);
+        mainLayout = new LinearLayout(this);
+
         winner = (TextView) findViewById(R.id.winner);
         testButton = (Button) findViewById(R.id.deal);
         foldButton = (Button) findViewById(R.id.fold);
         raiseButton = (Button) findViewById(R.id.raise);
+        infoButton = (ImageButton) findViewById(R.id.questionmark);
 
         raiseValue = (EditText)findViewById(R.id.raiseValue);
 
@@ -91,6 +116,8 @@ public class GamePlay extends ActionBarActivity {
         playerMoney = (TextView) findViewById(R.id.playerMoney);
         aiMoney = (TextView) findViewById(R.id.aiMoney);
         pot = (TextView) findViewById(R.id.pot);
+        aiCommands = (TextView) findViewById(R.id.aiCommands);
+        grade = (TextView) findViewById(R.id.grade);
 
         playerID.setText(userID);
         updateMoneyUI();
@@ -125,15 +152,25 @@ public class GamePlay extends ActionBarActivity {
         loader(assetManager);
 
         winner.setText("");
+        aiCommands.setText("");
 
 
         testButton.setTag(0);
         startOver();
+        infoButton.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v) {
+                    popUpInfo(v);
+            }
+        });
+
 
         foldButton.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v) {
                 addWinner(1);
                 pot.setText("pot: " + potValue);
+                if(Settings.getIntMoney(Settings.getUserID()) <= 0) {
+                    popUp(v);
+                }
                 startOver();
 
             }
@@ -146,29 +183,113 @@ public class GamePlay extends ActionBarActivity {
 
                 //betting on initial hands
 
-                 if(status == 0) {
+                if (status == 0) {
+                    numCallers++;
+                    doCall();
+                    if (numCallers < numPlayers) {
+                        //if ai checks then continue
+                        if (figureAi(0) == 2) {
+                            //set text that ai checked
+                            flop1.setImageResource(findPic(flopper[0]));
+                            flop2.setImageResource(findPic(flopper[1]));
+                            flop3.setImageResource(findPic(flopper[2]));
+                            v.setTag(1);
+                            numCallers = 0;
+                            testButton.setText("Check");
+                        }
+                    }
+                    //if ai calls already then you just show
+                    else {
+                        flop1.setImageResource(findPic(flopper[0]));
+                        flop2.setImageResource(findPic(flopper[1]));
+                        flop3.setImageResource(findPic(flopper[2]));
+                        v.setTag(1);
+                        numCallers = 0;
+                        testButton.setText("Check");
+                    }
 
-                    flop1.setImageResource(findPic(flopper[0]));
-                    flop2.setImageResource(findPic(flopper[1]));
-                    flop3.setImageResource(findPic(flopper[2]));
+                } else if (status == 1) {
+                    numCallers++;
+                    doCall();
+                    if (numCallers < numPlayers) {
+                        //if ai checks then continue
+                        if (figureAi(0) == 2) {
+                            //set text that ai checked
+                            turn.setImageResource(findPic(flopper[3]));
+                            v.setTag(2);
+                            numCallers = 0;
+                            testButton.setText("Check");
+                        }
+                    }
+                    //if ai calls already then you just show
+                    else {
+                        turn.setImageResource(findPic(flopper[3]));
+                        v.setTag(2);
+                        numCallers = 0;
+                        testButton.setText("Check");
+                    }
 
-                    v.setTag(1);
+
+                } else if (status == 2) {
+                    numCallers++;
+                    doCall();
+                    if (numCallers < numPlayers) {
+                        //if ai checks then continue
+                        if (figureAi(0) == 2) {
+                            //set text that ai checked
+                            river.setImageResource(findPic(flopper[4]));
+                            v.setTag(3);
+                            numCallers = 0;
+                            testButton.setText("Check");
+                        }
+                    }
+                    //if ai calls already then you just show
+                    else {
+                        river.setImageResource(findPic(flopper[4]));
+                        v.setTag(3);
+                        numCallers = 0;
+                        testButton.setText("Check");
+                    }
+                } else {
+                    numCallers++;
+                    doCall();
+                    if (numCallers < numPlayers) {
+                        //if ai checks then continue
+                        if (figureAi(0) == 2) {
+                            //set text that ai checked
+                            figureOutWinner();
+                            if (Settings.getIntMoney(Settings.getUserID()) == 0) {
+                                popUp(v);
+                            } else {
+                                startOver();
+                            }
+                            numCallers = 0;
+                            testButton.setText("Check");
+                        }
+
+                    }
+                    //if ai calls already then you just show
+                    else {
+                        figureOutWinner();
+                        if (Settings.getIntMoney(Settings.getUserID()) <= 0) {
+                            popUp(v);
+                        } else {
+                            startOver();
+                        }
+
+                        numCallers = 0;
+                        testButton.setText("Check");
+                    }
+
                 }
 
-                else if(status == 1) {
+                if(finishGame) {
+                    finishGame = false;
+                    doEverything();
+                    if(Settings.getIntMoney(Settings.getUserID()) <= 0) {
+                        popUp(v);
+                    }
 
-                    turn.setImageResource(findPic(flopper[3]));
-                    v.setTag(2);
-                }
-
-                else if (status == 2) {
-
-                     river.setImageResource(findPic(flopper[4]));
-                     v.setTag(3);
-                }
-
-                else {
-                   figureOutWinner();
                     startOver();
 
                 }
@@ -184,50 +305,137 @@ public class GamePlay extends ActionBarActivity {
                 //betting on initial hands
 
                 if (status == 0) {
-                    //get all 5 cards for holdem
-                    if(checkRaise(raisePot)) {
 
-                        flop1.setImageResource(findPic(flopper[0]));
-                        flop2.setImageResource(findPic(flopper[1]));
-                        flop3.setImageResource(findPic(flopper[2]));
-                        testButton.setTag(1);
+                    if (checkRaise(raisePot)) {
+                        numCallers++;
+                        doCall();
+                        if (numCallers < numPlayers) {
+                            //if ai checks then continue
+                            if (figureAi(raisePot) == 2) {
+                                //set text that ai checked
+                                flop1.setImageResource(findPic(flopper[0]));
+                                flop2.setImageResource(findPic(flopper[1]));
+                                flop3.setImageResource(findPic(flopper[2]));
+                                doRaise();
+                                v.setTag(1);
+                                numCallers = 0;
+                                testButton.setText("Check");
+                            }
 
-                        doRaise();
+                        }
+                        //if ai calls already then you just show
+                        else {
+                            flop1.setImageResource(findPic(flopper[0]));
+                            flop2.setImageResource(findPic(flopper[1]));
+                            flop3.setImageResource(findPic(flopper[2]));
+                            doRaise();
+                            v.setTag(1);
+                            numCallers = 0;
+                            testButton.setText("Check");
+                        }
+
                     }
 
-
-
                 } else if (status == 1) {
-                    if(checkRaise(raisePot)) {
-                        turn.setImageResource(findPic(flopper[3]));
-                        testButton.setTag(2);
-                        doRaise();
+                    if (checkRaise(raisePot)) {
+                        numCallers++;
+                        doCall();
+                        if (numCallers < numPlayers) {
+                            //if ai checks then continue
+                            if (figureAi(0) == 2) {
+                                //set text that ai checked
+                                turn.setImageResource(findPic(flopper[3]));
+                                v.setTag(2);
+                                numCallers = 0;
+                                testButton.setText("Check");
+                                doRaise();
+                            }
+
+                        }
+                        //if ai calls already then you just show
+                        else {
+                            turn.setImageResource(findPic(flopper[3]));
+                            v.setTag(2);
+                            numCallers = 0;
+                            testButton.setText("Check");
+                            doRaise();
+                        }
                     }
                 } else if (status == 2) {
 
                     if (checkRaise(raisePot)) {
-                        river.setImageResource(findPic(flopper[4]));
-                        testButton.setTag(3);
-                        doRaise();
+                        numCallers++;
+                        doCall();
+                        if (numCallers < numPlayers) {
+                            //if ai checks then continue
+                            if (figureAi(raisePot) == 2) {
+                                //set text that ai checked
+                                river.setImageResource(findPic(flopper[4]));
+                                v.setTag(3);
+                                numCallers = 0;
+                                testButton.setText("Check");
+                                doRaise();
+                            }
+
+                        }
+                        //if ai calls already then you just show
+                        else {
+                            river.setImageResource(findPic(flopper[4]));
+                            v.setTag(3);
+                            numCallers = 0;
+                            testButton.setText("Check");
+                            doRaise();
+                        }
                     }
-                }
-                else {
-                    if(checkRaise(raisePot)) {
+                } else {
+                    if (checkRaise(raisePot)) {
+                        //if ai checks then continue
+                        if (figureAi(0) == 2) {
+                            //set text that ai checked
+                            doRaise();
+                            figureOutWinner();
+                            if (Settings.getIntMoney(Settings.getUserID()) == 0) {
+                                popUp(v);
+                            } else {
+                                startOver();
+                            }
+                            numCallers = 0;
+                            testButton.setText("Check");
+                        }
+
+                    }
+                    //if ai calls already then you just show
+                    else {
                         doRaise();
                         figureOutWinner();
-                        startOver();
+                        if (Settings.getIntMoney(Settings.getUserID()) == 0) {
+                            popUp(v);
+                        } else {
+                            startOver();
+                        }
+
+                        numCallers = 0;
+                        testButton.setText("Check");
                     }
+
                 }
 
-                if(finishGame) {
+
+                if (finishGame) {
                     finishGame = false;
                     doEverything();
-                }
+                    if (Settings.getIntMoney(Settings.getUserID()) <= 0) {
+                        popUp(v);
+                    }
 
+                    startOver();
+
+                }
             }
 
 
         });
+
 
     }
 
@@ -253,9 +461,6 @@ public class GamePlay extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
-
-
 
 
     public List<Integer> shuffleCards() {
@@ -311,40 +516,54 @@ public class GamePlay extends ActionBarActivity {
         testButton.setEnabled(false);
         foldButton.setEnabled(false);
         raiseButton.setEnabled(false);
-        myHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                winner.setText("");
 
-                //sets all hands and their pictures
-                for (int n = 0; n < numPlayers; n++) {
-                    setHands(n);
+            myHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    winner.setText("");
+                    aiCommands.setText("");
+                    deck = shuffleCards();
+                    bitDeck = new Deck();
+
+                    //sets all hands and their pictures
+                    for (int n = 0; n < numPlayers; n++) {
+                        setHands(n);
+                    }
+
+                    ai = new Ai(allHands[1].getStrHand());
+                    Grader teacher = new Grader(allHands[0].getStrHand());
+                    grade.setText(teacher.returnGrade());
+
+                    flop1.setImageResource(R.drawable.b1fv);
+                    flop2.setImageResource(R.drawable.b1fv);
+                    flop3.setImageResource(R.drawable.b1fv);
+                    turn.setImageResource(R.drawable.b1fv);
+                    river.setImageResource(R.drawable.b1fv);
+
+                    //setting up ante for pot and subtracting from both players
+                    subAnte(ante);
+
+                    pot.setText("pot: " + String.valueOf(ante * numPlayers));
+                    potValue = ante * numPlayers;
+
+                    bitDeck.enumRandom();
+                    long flopCards = bitDeck.getBoard();
+                    flopper = CPlot.getCards(flopCards, 5);
+                    testButton.setEnabled(true);
+                    foldButton.setEnabled(true);
+                    raiseButton.setEnabled(true);
+
+                    //checks to see if money = 0
+
+                    if (Settings.getIntMoney("ai") <= 0) {
+                        Settings.addMoney("ai", 1000);
+                        updateMoneyUI();
+                    }
+
+
                 }
+            }, 5000);
 
-
-                flop1.setImageResource(R.drawable.b1fv);
-                flop2.setImageResource(R.drawable.b1fv);
-                flop3.setImageResource(R.drawable.b1fv);
-                turn.setImageResource(R.drawable.b1fv);
-                river.setImageResource(R.drawable.b1fv);
-
-                //setting up ante for pot and subtracting from both players
-                subAnte(ante);
-
-                pot.setText("pot: " + String.valueOf(ante * numPlayers));
-                potValue = ante * numPlayers;
-
-                deck = shuffleCards();
-                bitDeck = new Deck();
-
-                bitDeck.enumRandom();
-                long flopCards = bitDeck.getBoard();
-                flopper = CPlot.getCards(flopCards);
-                testButton.setEnabled(true);
-                foldButton.setEnabled(true);
-                raiseButton.setEnabled(true);
-            }
-        },5000);
 
     }
 
@@ -360,9 +579,9 @@ public class GamePlay extends ActionBarActivity {
         updateMoneyUI();
     }
 
-    public void subMoney(String id) {
-        Settings.subMoney(id, raisePot);
-        potValue = potValue + raisePot;
+    public void subMoney(String id, int amount) {
+        Settings.subMoney(id, amount);
+        potValue = potValue + amount;
     }
 
     public void addWinner(int winner) {
@@ -403,8 +622,7 @@ public class GamePlay extends ActionBarActivity {
     }
 
     public void doRaise() {
-        subMoney("ai");
-        subMoney(Settings.getUserID());
+        subMoney(Settings.getUserID(), raisePot);
         raisePot = 0;
 
         if(Settings.getIntMoney("ai") == 0 || Settings.getIntMoney(Settings.getUserID()) == 0) {
@@ -423,7 +641,6 @@ public class GamePlay extends ActionBarActivity {
 
         figureOutWinner();
         testButton.setTag(0);
-        startOver();
     }
 
     public void figureOutWinner() {
@@ -457,6 +674,132 @@ public class GamePlay extends ActionBarActivity {
             winner.setText("It's a tie!");
         }
         addWinner(winningHand);
+    }
+
+    public void popUp(View oldView) {
+        LayoutInflater layoutInflater
+                = (LayoutInflater)getBaseContext()
+                .getSystemService(LAYOUT_INFLATER_SERVICE);
+        View popupView = layoutInflater.inflate(R.layout.playagainwindow, null);
+        final PopupWindow popupWindow = new PopupWindow(
+                popupView,
+                LayoutParams.WRAP_CONTENT,
+                LayoutParams.WRAP_CONTENT);
+
+        Button yesButton = (Button)popupView.findViewById(R.id.yesButton);
+        Button noButton = (Button)popupView.findViewById(R.id.noButton);
+        yesButton.setOnClickListener(new Button.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                popupWindow.dismiss();
+                Settings.addMoney(Settings.getUserID(), 1000);
+                startOver();
+            }});
+
+        noButton.setOnClickListener(new Button.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                popupWindow.dismiss();
+                goHome(v);
+            }});
+        popupWindow.showAtLocation(oldView, Gravity.CENTER, 0, 0);
+    }
+
+    public void popUpInfo(View oldView) {
+        LayoutInflater layoutInflater
+                = (LayoutInflater)getBaseContext()
+                .getSystemService(LAYOUT_INFLATER_SERVICE);
+        View popupView = layoutInflater.inflate(R.layout.grade_info, null);
+        final PopupWindow popupInfo = new PopupWindow(
+                popupView,
+                LayoutParams.WRAP_CONTENT,
+                LayoutParams.WRAP_CONTENT);
+
+        Button okButton = (Button)popupView.findViewById(R.id.exitInfo);
+        okButton.setOnClickListener(new Button.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                popupInfo.dismiss();
+            }});
+        popupInfo.showAtLocation(oldView, Gravity.CENTER, 0, 0);
+    }
+
+    public void goHome(View view) {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
+
+    public int figureAi(int value) {
+        String command = ai.whatToDo(value);
+        if(command.equals("raise")) {
+            doAiRaise();
+            aiCommands.setText("Ai has raised by " + aiRaisePot);
+
+            if(aiRaisePot == Settings.getIntMoney(Settings.getUserID())) {
+                testButton.setText("All in");
+            }
+            else {
+                testButton.setText("Call");
+            }
+            return 1;
+        }
+
+        else if(command.equals("check")) {
+            numCallers++;
+            if(value > 0) {
+                aiCommands.setText("Ai has called " + value);
+                subMoney("ai", value);
+            }
+            else {
+                aiCommands.setText("Ai has checked");
+            }
+            return 2;
+        }
+
+        else {
+            aiCommands.setText("Ai has fold");
+            addWinner(0);
+            pot.setText("pot: " + potValue);
+            startOver();
+            return 3;
+        }
+
+    }
+
+    public void doAiRaise() {
+        Random rand = new Random();
+        int percent = rand.nextInt(15);
+        if (percent == 0) {
+            percent = 8;
+        }
+        int raiseAmount = Settings.getIntMoney("ai")  * percent/100;
+        numCallers = 1;
+
+        if(raisePot == 0) {
+            aiRaisePot = raiseAmount;
+        }
+        else {
+            aiRaisePot = raiseAmount + raisePot;
+        }
+
+        if(aiRaisePot > Settings.getIntMoney(Settings.getUserID())) {
+            aiRaisePot = Settings.getIntMoney(Settings.getUserID());
+        }
+        subMoney("ai", aiRaisePot);
+        updateMoneyUI();
+    }
+
+    public void doCall() {
+        if(testButton.getText().equals("Call") || testButton.getText().equals("All in")) {
+            subMoney(Settings.getUserID(),aiRaisePot);
+            updateMoneyUI();
+        }
+
+        if(Settings.getIntMoney(Settings.getUserID()) <= 0) {
+            finishGame = true;
+        }
     }
 
     public int findPic(String cardStr) {

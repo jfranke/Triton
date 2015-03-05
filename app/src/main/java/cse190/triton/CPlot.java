@@ -17,8 +17,6 @@
 
 package cse190.triton;
 
-import java.lang.reflect.Array;
-
 public class CPlot {
 
     public static void print(Long h) {
@@ -57,13 +55,13 @@ public class CPlot {
         return r;
     }
 
-    public static String[] getCards(Long h) {
+    public static String[] getCards(Long h, int size) {
         Long mask = 0x8000000000000000L;
         Long masked = 0L;
         int c = 0;
 
         int m = 0;
-        String[] retCards = new String[5];
+        String[] retCards = new String[size];
         Boolean flag = false;
 
         String r = "";

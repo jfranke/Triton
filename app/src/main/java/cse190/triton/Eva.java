@@ -21,9 +21,6 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import gnu.trove.map.hash.TLongIntHashMap;
-import java.io.File;
-
-
 
 import static cse190.triton.NikiConstants.*;
 
@@ -38,6 +35,18 @@ public class Eva {
         0x1F0, 0x3E0,  0x7C0,  0xF80,
         0x1F00, 0x3E00, 0x7C00, 0xF800
     };
+
+    public static void loadEnumHands() {
+        try {
+            FileInputStream fis = new FileInputStream("nonflush.ser");
+            ObjectInputStream ois = new ObjectInputStream(fis);
+            hmNonFlush = (TLongIntHashMap) ois.readObject();
+            ois.close();
+            System.out.println("loaded hm size: " + hmNonFlush.size());
+        } catch(Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
 
 
     public static void loadEnumHands(InputStream file) {
@@ -124,4 +133,6 @@ public class Eva {
 
         return vmF | kickers;
     }
+
+
 }

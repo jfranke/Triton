@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:background="@android:color/background_light"
+    android:gravity="center"
+    android:weightSum="1">
+    <ScrollView
+        android:layout_width="365dp"
+        android:layout_height="320dp"
+        android:orientation="vertical"
+        android:padding="10dp"
+        android:background="@android:color/darker_gray"
+        android:layout_gravity="center">
+        <GridLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:rowCount="6"
+            android:columnCount="2"
+            android:useDefaultMargins="true">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="A"
+                android:textSize="60dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="B"
+                android:textSize="60dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="C"
+                android:textSize="60dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="D"
+                android:textSize="60dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="F"
+                android:textSize="60dp"/>
+            <Space android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+
+            <TextView
+                android:layout_width="280dp"
+                android:layout_height="wrap_content"
+                android:text="A is the best grade, you have a high chance of winning and because of this you should be raising or at least calling"
+                android:layout_gravity="center"/>
+
+            <TextView
+                android:layout_width="280dp"
+                android:layout_height="wrap_content"
+                android:text="B is the best grade, you have a high chance of winning and because of this you should be raising or at least calling"
+                android:layout_gravity="center"/>
+
+            <TextView
+                android:layout_width="280dp"
+                android:layout_height="wrap_content"
+                android:text="C is the best grade, you have a high chance of winning and because of this you should be raising or at least calling"
+                android:layout_gravity="center"/>
+            <TextView
+                android:layout_width="280dp"
+                android:layout_height="wrap_content"
+                android:text="D is the best grade, you have a high chance of winning and because of this you should be raising or at least calling"
+                android:layout_gravity="center"/>
+            <TextView
+                android:layout_width="280dp"
+                android:layout_height="wrap_content"
+                android:text="F is the best grade, you have a high chance of winning and because of this you should be raising or at least calling"
+                android:layout_gravity="center"/>
+            <Button
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Ok"
+                android:id="@+id/exitInfo" />
+
+        </GridLayout>
+
+    </ScrollView>
+</LinearLayout>

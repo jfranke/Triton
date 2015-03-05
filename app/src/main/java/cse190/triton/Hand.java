@@ -24,7 +24,7 @@ public class Hand {
     public long hKey = 1; //key for hand
     int wins = 0;
 
-    Hand() {};
+    Hand() {}
     
     Hand(long cards) {
         this.hCards = cards;
@@ -32,6 +32,32 @@ public class Hand {
             if((cards & DECK_BIT_MASKS[i]) == DECK_BIT_MASKS[i])
                 hKey = hKey * PRIMES[i];
         }
+    }
+
+    Hand(String commaSeparated) {
+        hCards = 0;
+        hKey = 1;
+        String[] cards = commaSeparated.split(",");
+        for(String card : cards)
+            this.addCard(card);
+    }
+
+    public void addCard(String card) {
+        for(int i = 0; i < DECK_STRINGS.length; i++) {
+            if(card.equals(DECK_STRINGS[i])) {
+                hKey = hKey * PRIMES[i];
+                hCards = hCards | DECK_BIT_MASKS[i];
+            }
+        }
+    }
+
+    public void wins() {
+        this.wins++;
+    }
+
+    public String getStrHand() {
+        String[] bothCards = CPlot.getCards(hCards, 2);
+        return bothCards[0] + "," + bothCards[1];
     }
 
 }

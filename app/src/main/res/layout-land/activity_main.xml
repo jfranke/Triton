@@ -14,4 +14,15 @@
         android:layout_centerHorizontal="true"
         android:onClick="goOptions"/>
 
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/volumeOption"
+        android:clickable="true"
+        android:baselineAlignBottom="true"
+        android:background="@drawable/volumeoption"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
 </RelativeLayout>
