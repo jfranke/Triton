@@ -79,6 +79,7 @@ public class GamePlay extends ActionBarActivity {
     Button foldButton;
     Button raiseButton;
     ImageButton infoButton;
+    ImageButton volumeOptions;
 
     EditText raiseValue;
     int raisePot;
@@ -91,17 +92,34 @@ public class GamePlay extends ActionBarActivity {
     LinearLayout layout;
     LinearLayout mainLayout;
 
-
     AiRate ai;
+
+    //music stuff
+    public Intent music;
+    public ServiceConnectionBinder service = new ServiceConnectionBinder(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_play);
 
+        //music service
+        service.doBindService();
+        music = new Intent();
+        music.setClass(this,MusicService.class);
+        startService(music);
+
         //setting up popup window
         layout = new LinearLayout(this);
         mainLayout = new LinearLayout(this);
+
+        volumeOptions = (ImageButton) findViewById(R.id.volumeOptions);
+
+        volumeOptions.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v) {
+                SoundOptions.doPopUp(getBaseContext(), v, layout, mainLayout);
+            }
+        });
 
         winner = (TextView) findViewById(R.id.winner);
         testButton = (Button) findViewById(R.id.deal);
@@ -862,8 +880,15 @@ public class GamePlay extends ActionBarActivity {
             case "2s":  return R.drawable.spades2;
             default: return R.drawable.b1fv;
         }
+
     }
 
-
+    @Override
+    public void onPause() {
+        service.doUnbindService();
+        service.getConnectionService().onDestroy();
+        stopService(music);
+        super.onPause();
+    }
 }
 

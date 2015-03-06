@@ -9,18 +9,40 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 
 
 public class OptionActivity extends ActionBarActivity {
+    ImageButton volumeOptions;
+    LinearLayout layout;
+    LinearLayout mainLayout;
+    Intent music;
+    ServiceConnectionBinder service = new ServiceConnectionBinder(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_option);
+
+        //music service
+        service.doBindService();
+        music = new Intent();
+        music.setClass(this,MusicService.class);
+        startService(music);
+
+        layout = new LinearLayout(this);
+        mainLayout = new LinearLayout(this);
+        volumeOptions = (ImageButton) findViewById(R.id.volumeOptions);
+
+        volumeOptions.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v) {
+                SoundOptions.doPopUp(getBaseContext(), v, layout, mainLayout);
+            }
+        });
 
         //selection for how many players
         final Spinner numPlayers = (Spinner)findViewById(R.id.spinner1);
@@ -93,7 +115,17 @@ public class OptionActivity extends ActionBarActivity {
     }
 
     public void startGame(View view) {
+        service.doUnbindService();
+        service.getConnectionService().onDestroy();
         Intent intent = new Intent(this, GamePlay.class);
         startActivity(intent);
+    }
+
+    @Override
+    public void onPause() {
+        service.doUnbindService();
+        service.getConnectionService().onDestroy();
+        stopService(music);
+        super.onPause();
     }
 }

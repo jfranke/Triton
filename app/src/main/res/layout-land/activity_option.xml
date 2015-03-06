@@ -87,4 +87,14 @@
         android:hint="Name to be called"
         android:text="Minh" />
 
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/volumeOptions"
+        android:src="@drawable/volumeoption"
+        android:layout_alignParentTop="true"
+        android:layout_alignRight="@+id/ID"
+        android:layout_alignEnd="@+id/ID"
+        android:background="@null"/>
+
 </RelativeLayout>
