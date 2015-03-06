@@ -9,7 +9,10 @@ import java.util.Random;
 public class AiRate {
     double winRate;
     double startingMoney;
-    public AiRate(String hand) {
+    String aiName;
+    Boolean fold;
+    int currentBet;
+    public AiRate(String hand, String name) {
 
         String base;
         if (checkCards(hand, "Kd,4h")) {
@@ -70,7 +73,11 @@ public class AiRate {
         winPercentage = (double) Math.round(winPercentage * 10) / 10;
 
         winRate = winPercentage;
-        startingMoney = Settings.getIntMoney("ai");
+        startingMoney = Settings.getIntMoney("User");
+        System.out.println(startingMoney);
+        aiName = name;
+        fold = false;
+        currentBet = 0;
     }
 
 
@@ -98,13 +105,13 @@ public class AiRate {
             winRate = winRate + 20;
         }
 
-        double checker = winRate - (betAmount/startingMoney);
+        double checker = winRate - (betAmount/startingMoney * 100);
 
         if (checker < -15) {
             return "fold";
         }
 
-        else if (checker < 50) {
+        else if (checker < 60) {
             return "check";
         }
 

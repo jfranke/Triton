@@ -11,18 +11,18 @@ android:paddingBottom="@dimen/activity_vertical_margin" tools:context="cse190.tr
     android:layout_height="wrap_content"
     android:text="Check"
     android:id="@+id/deal"
-        android:layout_alignTop="@+id/fold"
-        android:layout_toRightOf="@+id/fold"
-        android:layout_toEndOf="@+id/fold" />
+        android:layout_toLeftOf="@+id/raise"
+        android:layout_toStartOf="@+id/raise"
+        android:layout_alignBottom="@+id/grade" />
 
     <TextView
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:text="who wins"
     android:id="@+id/winner"
-    android:layout_below="@+id/p2c2"
-    android:layout_alignLeft="@+id/deal"
-    android:layout_alignStart="@+id/deal" />
+        android:layout_above="@+id/river"
+        android:layout_alignRight="@+id/raise"
+        android:layout_alignEnd="@+id/raise" />
 
 
 <ImageView
@@ -31,65 +31,62 @@ android:paddingBottom="@dimen/activity_vertical_margin" tools:context="cse190.tr
     android:id="@+id/p1c1"
     android:visibility="visible"
     android:src="@drawable/b1fv"
-    android:layout_alignBottom="@+id/playerMoney"
-    android:layout_toRightOf="@+id/flop2"
-    android:layout_toEndOf="@+id/flop2" />
+    android:layout_alignTop="@+id/raiseValue"
+    android:layout_toLeftOf="@+id/p1c2"
+    android:layout_toStartOf="@+id/p1c2" />
 
 <ImageView
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:id="@+id/p1c2"
     android:src="@drawable/b1fv"
-    android:layout_alignParentBottom="true"
-    android:layout_toRightOf="@+id/p1c1"
-    android:layout_toEndOf="@+id/p1c1" />
+    android:layout_alignTop="@+id/p1c1"
+    android:layout_centerHorizontal="true" />
 
 <ImageView
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:id="@+id/p2c1"
     android:src="@drawable/b1fv"
-    android:layout_alignParentTop="true"
     android:layout_toRightOf="@+id/flop2"
-    android:layout_toEndOf="@+id/flop2" />
+    android:layout_toEndOf="@+id/flop2"
+    android:layout_below="@+id/aiName" />
 
 <ImageView
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:id="@+id/p2c2"
     android:src="@drawable/b1fv"
-    android:layout_alignParentTop="true"
-    android:layout_toRightOf="@+id/flop3"
-    android:layout_toEndOf="@+id/flop3" />
+    android:layout_alignTop="@+id/p2c1"
+    android:layout_toRightOf="@+id/p2c1"
+    android:layout_toEndOf="@+id/p2c1" />
 
 <ImageView
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:id="@+id/flop1"
     android:src="@drawable/b1fv"
-    android:layout_centerVertical="true"
-    android:layout_toRightOf="@+id/pot"
-    android:layout_toEndOf="@+id/pot"
-    android:layout_marginLeft="43dp"
-    android:layout_marginStart="43dp" />
+    android:layout_alignTop="@+id/flop2"
+    android:layout_toLeftOf="@+id/flop2"
+    android:layout_toStartOf="@+id/flop2" />
 
 <ImageView
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:id="@+id/flop2"
     android:src="@drawable/b1fv"
-    android:layout_alignTop="@+id/flop1"
-    android:layout_toRightOf="@+id/flop1"
-    android:layout_toEndOf="@+id/flop1" />
+    android:layout_alignTop="@+id/flop3"
+    android:layout_toLeftOf="@+id/flop3"
+    android:layout_toStartOf="@+id/flop3" />
 
 <ImageView
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:id="@+id/flop3"
     android:src="@drawable/b1fv"
-    android:layout_centerVertical="true"
-    android:layout_toRightOf="@+id/flop2"
-    android:layout_toEndOf="@+id/flop2" />
+    android:layout_below="@+id/winner"
+    android:layout_toLeftOf="@+id/turn"
+    android:layout_toStartOf="@+id/turn" />
 
 <ImageView
     android:layout_width="wrap_content"
@@ -113,22 +110,11 @@ android:paddingBottom="@dimen/activity_vertical_margin" tools:context="cse190.tr
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="1000"
-        android:id="@+id/playerMoney"
-        android:layout_alignParentBottom="true"
-        android:layout_toLeftOf="@+id/p1c1"
-        android:layout_toStartOf="@+id/p1c1" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="Player Name"
         android:id="@+id/playerID"
-        android:layout_toLeftOf="@+id/p1c1"
-        android:layout_toStartOf="@+id/p1c1"
-        android:textStyle="bold"
-        android:layout_alignBottom="@+id/deal" />
+        android:layout_alignParentBottom="true"
+        android:layout_alignLeft="@+id/p1c1"
+        android:layout_alignStart="@+id/p1c1" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -136,20 +122,9 @@ android:paddingBottom="@dimen/activity_vertical_margin" tools:context="cse190.tr
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="AI"
         android:id="@+id/aiName"
-        android:layout_alignParentTop="true"
-        android:layout_toLeftOf="@+id/p2c1"
-        android:layout_toStartOf="@+id/p2c1"
-        android:textStyle="bold"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="1000"
-        android:id="@+id/aiMoney"
-        android:layout_below="@+id/aiName"
-        android:layout_toLeftOf="@+id/p2c1"
-        android:layout_toStartOf="@+id/p2c1" />
+        android:layout_alignTop="@+id/backButton"
+        android:layout_alignLeft="@+id/p3c1"
+        android:layout_alignStart="@+id/p3c1" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -167,9 +142,9 @@ android:paddingBottom="@dimen/activity_vertical_margin" tools:context="cse190.tr
         android:layout_height="wrap_content"
         android:text="Fold"
         android:id="@+id/fold"
-        android:layout_alignTop="@+id/p1c2"
-        android:layout_toRightOf="@+id/river"
-        android:layout_toEndOf="@+id/river" />
+        android:layout_alignTop="@+id/deal"
+        android:layout_toLeftOf="@+id/deal"
+        android:layout_toStartOf="@+id/deal" />
 
     <Button
         style="?android:attr/buttonStyleSmall"
@@ -198,9 +173,9 @@ android:paddingBottom="@dimen/activity_vertical_margin" tools:context="cse190.tr
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="What ai does"
         android:id="@+id/aiCommands"
-        android:layout_above="@+id/river"
-        android:layout_alignRight="@+id/deal"
-        android:layout_alignEnd="@+id/deal" />
+        android:layout_alignTop="@+id/pot"
+        android:layout_alignRight="@+id/raiseValue"
+        android:layout_alignEnd="@+id/raiseValue" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -208,7 +183,7 @@ android:paddingBottom="@dimen/activity_vertical_margin" tools:context="cse190.tr
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="Hand Grade:"
         android:id="@+id/gradeText"
-        android:layout_alignTop="@+id/p1c1"
+        android:layout_above="@+id/fold"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
@@ -220,8 +195,8 @@ android:paddingBottom="@dimen/activity_vertical_margin" tools:context="cse190.tr
         android:id="@+id/grade"
         android:textSize="30dp"
         android:layout_alignParentBottom="true"
-        android:layout_toLeftOf="@+id/flop1"
-        android:layout_toStartOf="@+id/flop1" />
+        android:layout_toRightOf="@+id/pot"
+        android:layout_toEndOf="@+id/pot" />
 
     <ImageButton
         android:layout_width="wrap_content"
@@ -251,6 +226,122 @@ android:paddingBottom="@dimen/activity_vertical_margin" tools:context="cse190.tr
         android:src="@drawable/back"
         android:background="@null"
         android:onClick="goBack"/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/p3c1"
+        android:src="@drawable/b1fv"
+        android:layout_below="@+id/aiName"
+        android:layout_toLeftOf="@+id/p3c2"
+        android:layout_toStartOf="@+id/p3c2" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/p3c2"
+        android:src="@drawable/b1fv"
+        android:layout_toRightOf="@+id/questionmark"
+        android:layout_toEndOf="@+id/questionmark"
+        android:layout_below="@+id/aiName" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/p4c1"
+        android:src="@drawable/b1fv"
+        android:layout_alignTop="@+id/p2c2"
+        android:layout_toLeftOf="@+id/p4c2"
+        android:layout_toStartOf="@+id/p4c2" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/p4c2"
+        android:src="@drawable/b1fv"
+        android:layout_alignTop="@+id/p4c1"
+        android:layout_toLeftOf="@+id/raise"
+        android:layout_toStartOf="@+id/raise" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="what ai2 does"
+        android:id="@+id/aiCommands2"
+        android:layout_below="@+id/aiCommands"
+        android:layout_alignRight="@+id/raiseValue"
+        android:layout_alignEnd="@+id/raiseValue" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="what ai3 does"
+        android:id="@+id/aiCommands3"
+        android:layout_below="@+id/aiCommands2"
+        android:layout_alignRight="@+id/aiCommands2"
+        android:layout_alignEnd="@+id/aiCommands2" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="AI2"
+        android:id="@+id/aiName2"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/flop2"
+        android:layout_toEndOf="@+id/flop2" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Ai3"
+        android:id="@+id/aiName3"
+        android:layout_above="@+id/p4c1"
+        android:layout_alignLeft="@+id/p4c1"
+        android:layout_alignStart="@+id/p4c1" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="current bet"
+        android:id="@+id/userBet"
+        android:layout_above="@+id/p1c1"
+        android:layout_toRightOf="@+id/flop2"
+        android:layout_toEndOf="@+id/flop2" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="current bet"
+        android:id="@+id/aiBet"
+        android:layout_below="@+id/p3c1"
+        android:layout_alignLeft="@+id/p3c1"
+        android:layout_alignStart="@+id/p3c1" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="current Bet"
+        android:id="@+id/aiBet2"
+        android:layout_alignTop="@+id/aiBet"
+        android:layout_alignLeft="@+id/p2c1"
+        android:layout_alignStart="@+id/p2c1" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="current bet"
+        android:id="@+id/aiBet3"
+        android:layout_below="@+id/p4c1"
+        android:layout_alignLeft="@+id/p4c1"
+        android:layout_alignStart="@+id/p4c1" />
 
 </RelativeLayout>
 

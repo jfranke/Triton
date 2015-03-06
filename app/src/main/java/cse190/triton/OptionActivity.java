@@ -46,7 +46,7 @@ public class OptionActivity extends ActionBarActivity {
 
         //selection for how many players
         final Spinner numPlayers = (Spinner)findViewById(R.id.spinner1);
-        String[] items = new String[]{"2"};
+        String[] items = new String[]{"1", "2", "3"};
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, items);
         numPlayers.setAdapter(adapter);
 
@@ -57,9 +57,8 @@ public class OptionActivity extends ActionBarActivity {
         final Button play = (Button) findViewById(R.id.play);
 
         play.setOnClickListener(new View.OnClickListener() {
-            int tempPlayers = Integer.parseInt(String.valueOf(numPlayers.getSelectedItem()));
-
             public void onClick(View v) {
+                int tempPlayers = Integer.parseInt(String.valueOf(numPlayers.getSelectedItem()));
                 String tempMoney = startingMoney.getText().toString();
                 String tempID = userID.getText().toString();
 
@@ -78,9 +77,10 @@ public class OptionActivity extends ActionBarActivity {
                 }
 
                 else {
-                    Settings.setNumPlayers(tempPlayers);
+                    Settings.setNumPlayers(tempPlayers + 1);
                     Settings.setStartingMoney(tempMoney);
                     Settings.setUserID(tempID);
+                    System.out.println(tempPlayers + 1);
                     startGame(v);
                 }
             }
