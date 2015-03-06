@@ -121,6 +121,14 @@ public class OptionActivity extends ActionBarActivity {
         startActivity(intent);
     }
 
+    public void goBack(View view) {
+        service.doUnbindService();
+        service.getConnectionService().onDestroy();
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
+
+
     @Override
     public void onPause() {
         service.doUnbindService();

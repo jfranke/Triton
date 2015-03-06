@@ -97,4 +97,15 @@
         android:layout_alignEnd="@+id/ID"
         android:background="@null"/>
 
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/backButton"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:src="@drawable/back"
+        android:background="@null"
+        android:onClick="goBack"/>
+
 </RelativeLayout>
