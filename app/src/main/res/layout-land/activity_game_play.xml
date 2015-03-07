@@ -9,11 +9,13 @@ android:paddingBottom="@dimen/activity_vertical_margin" tools:context="cse190.tr
     <Button
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:text="Check"
+    android:text="CHECK"
     android:id="@+id/deal"
         android:layout_toLeftOf="@+id/raise"
         android:layout_toStartOf="@+id/raise"
-        android:layout_alignBottom="@+id/grade" />
+        android:layout_alignBottom="@+id/grade"
+        android:width="80dp"
+        android:textSize="28px" />
 
     <TextView
     android:layout_width="wrap_content"
@@ -140,21 +142,23 @@ android:paddingBottom="@dimen/activity_vertical_margin" tools:context="cse190.tr
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Fold"
+        android:text="FOLD"
         android:id="@+id/fold"
         android:layout_alignTop="@+id/deal"
         android:layout_toLeftOf="@+id/deal"
-        android:layout_toStartOf="@+id/deal" />
+        android:layout_toStartOf="@+id/deal"
+        android:width="80dp" />
 
     <Button
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Raise"
+        android:text="RAISE"
         android:id="@+id/raise"
         android:layout_alignTop="@+id/deal"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:width="80dp" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -174,8 +178,8 @@ android:paddingBottom="@dimen/activity_vertical_margin" tools:context="cse190.tr
         android:text="What ai does"
         android:id="@+id/aiCommands"
         android:layout_alignTop="@+id/pot"
-        android:layout_alignRight="@+id/raiseValue"
-        android:layout_alignEnd="@+id/raiseValue" />
+        android:layout_alignRight="@+id/winner"
+        android:layout_alignEnd="@+id/winner" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -214,8 +218,8 @@ android:paddingBottom="@dimen/activity_vertical_margin" tools:context="cse190.tr
         android:src="@drawable/volumeoption"
         android:background="@null"
         android:layout_alignParentTop="true"
-        android:layout_alignRight="@+id/raiseValue"
-        android:layout_alignEnd="@+id/raiseValue" />
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -270,8 +274,8 @@ android:paddingBottom="@dimen/activity_vertical_margin" tools:context="cse190.tr
         android:text="what ai2 does"
         android:id="@+id/aiCommands2"
         android:layout_below="@+id/aiCommands"
-        android:layout_alignRight="@+id/raiseValue"
-        android:layout_alignEnd="@+id/raiseValue" />
+        android:layout_alignRight="@+id/aiCommands"
+        android:layout_alignEnd="@+id/aiCommands" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -342,6 +346,26 @@ android:paddingBottom="@dimen/activity_vertical_margin" tools:context="cse190.tr
         android:layout_below="@+id/p4c1"
         android:layout_alignLeft="@+id/p4c1"
         android:layout_alignStart="@+id/p4c1" />
+
+    <SeekBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/raiseSeek"
+        android:layout_below="@+id/aiCommands3"
+        android:layout_alignLeft="@+id/raiseValue"
+        android:layout_alignStart="@+id/raiseValue"
+        android:layout_alignRight="@+id/aiCommands3"
+        android:layout_alignEnd="@+id/aiCommands3" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Small Text"
+        android:id="@+id/raiseNum"
+        android:layout_below="@+id/raiseSeek"
+        android:layout_alignRight="@+id/raiseValue"
+        android:layout_alignEnd="@+id/raiseValue" />
 
 </RelativeLayout>
 
