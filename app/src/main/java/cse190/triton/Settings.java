@@ -3,14 +3,15 @@ package cse190.triton;
 public class Settings {
 
     static int numPlayers = 2;
-    static String aiMoney = "0";
-    static String aiMoney2 = "0";
-    static String aiMoney3 = "0";
-    static String playerMoney = "0";
+    static String aiMoney = "100000";
+    static String aiMoney2 = "100000";
+    static String aiMoney3 = "100000";
+    static String playerMoney = "5000";
     static String userID = "";
-    static String aiName = "Minh";
-    static String aiName2 = "John";
-    static String aiName3 = "Albert";
+    static String aiName = "";
+    static String aiName2 = "";
+    static String aiName3 = "";
+    static boolean anteOn = false;
 
     public static int getNumPlayers() {
         return numPlayers;
@@ -22,8 +23,11 @@ public class Settings {
 
     public static String getUserID() {return userID;}
 
-    public static void setUserID(String id) {
+    public static void setUserID(String id, String ai, String ai2, String ai3) {
         userID = id;
+        aiName = ai;
+        aiName2 = ai2;
+        aiName3 = ai3;
     }
 
     public static String getMoney(String id) {
@@ -60,12 +64,6 @@ public class Settings {
         }
     }
 
-    public static void setStartingMoney(String y) {
-        aiMoney = "100000";
-        aiMoney2 = "100000";
-        aiMoney3 = "100000";
-        playerMoney = "5000";
-    }
 
     public static String subMoney(String id, int amount) {
         if (id.equals(aiName)) {

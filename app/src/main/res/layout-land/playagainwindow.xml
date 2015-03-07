@@ -21,7 +21,7 @@
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="Uh oh! You ran out of money. Do you want to keep playing?" />
+                android:text="Uh oh! You ran out of money. Do you want to try again?" />
 
         </LinearLayout>
 

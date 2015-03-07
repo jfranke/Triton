@@ -6,8 +6,10 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -37,12 +39,18 @@ public class OptionActivity extends ActionBarActivity {
         layout = new LinearLayout(this);
         mainLayout = new LinearLayout(this);
         volumeOptions = (ImageButton) findViewById(R.id.volumeOptions);
-
         volumeOptions.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v) {
                 SoundOptions.doPopUp(getBaseContext(), v, layout, mainLayout);
             }
         });
+
+        final EditText aiName = (EditText)findViewById(R.id.aiName);
+        final EditText aiName2 = (EditText)findViewById(R.id.aiName2);
+        final EditText aiName3 = (EditText)findViewById(R.id.aiName3);
+        final CheckBox anteOnBox = (CheckBox) findViewById(R.id.anteOnBox);
+        //aiName setup
+
 
         //selection for how many players
         final Spinner numPlayers = (Spinner)findViewById(R.id.spinner1);
@@ -50,36 +58,68 @@ public class OptionActivity extends ActionBarActivity {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, items);
         numPlayers.setAdapter(adapter);
 
-        //value of money
-        final EditText startingMoney = (EditText)findViewById(R.id.startingMoney);
-        final EditText userID = (EditText)findViewById(R.id.userID);
+        numPlayers.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                if((position > 0)) {
+                    aiName2.setVisibility(View.VISIBLE);
+                }
 
+                else {
+                    aiName2.setVisibility(View.GONE);
+                }
+
+                if((position > 1)) {
+                    aiName3.setVisibility(View.VISIBLE);
+                }
+
+                else {
+                    aiName3.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // your code here
+            }
+
+        });
+
+        //value of money
+        final EditText userID = (EditText)findViewById(R.id.userID);
         final Button play = (Button) findViewById(R.id.play);
 
         play.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 int tempPlayers = Integer.parseInt(String.valueOf(numPlayers.getSelectedItem()));
-                String tempMoney = startingMoney.getText().toString();
                 String tempID = userID.getText().toString();
+
+                //ai names
+                String aiID = aiName.getText().toString();
+                String aiID2 = aiName2.getText().toString();
+                String aiID3 = aiName3.getText().toString();
+                if(aiID.isEmpty()) {
+                    aiID = "Minh";
+                }
+
+                if(aiID2.isEmpty()) {
+                    aiID2 = "John";
+                }
+
+                if(aiID3.isEmpty()) {
+                    aiID3 = "Albert";
+                }
 
                 if(tempID.isEmpty()) {
                     Toast.makeText(getApplicationContext(), "Please state a username",
                             Toast.LENGTH_SHORT).show();
                 }
-                else if(tempMoney.isEmpty()) {
-                    Toast.makeText(getApplicationContext(), "Starting money is too low. Please pick a number greater than 1000.",
-                            Toast.LENGTH_SHORT).show();
-                }
-
-                else if(Integer.parseInt(tempMoney) < 1000) {
-                    Toast.makeText(getApplicationContext(), "Starting money is too low. Please pick a number greater than 1000.",
-                            Toast.LENGTH_SHORT).show();
-                }
-
                 else {
+                    if(anteOnBox.isChecked()) {
+                        Settings.anteOn = true;
+                    }
                     Settings.setNumPlayers(tempPlayers + 1);
-                    Settings.setStartingMoney(tempMoney);
-                    Settings.setUserID(tempID);
+                    Settings.setUserID(tempID, aiID, aiID2, aiID3);
                     System.out.println(tempPlayers + 1);
                     startGame(v);
                 }

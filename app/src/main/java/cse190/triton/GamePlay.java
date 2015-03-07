@@ -573,17 +573,17 @@ public class GamePlay extends ActionBarActivity {
                         setHands(n);
                     }
 
-                    ai = new AiRate(allHands[1].getStrHand(), "Minh");
+                    ai = new AiRate(allHands[1].getStrHand(), Settings.aiName);
                     ai.fold = false;
                     allAi[0] = ai;
                     if (numPlayers > 2) {
-                        ai2 = new AiRate(allHands[2].getStrHand(), "John");
+                        ai2 = new AiRate(allHands[2].getStrHand(), Settings.aiName2);
                         ai2.fold = false;
                         allAi[0] = ai2;
                         allAi[1] = ai;
                     }
                     if(numPlayers > 3) {
-                        ai3 = new AiRate(allHands[3].getStrHand(), "Albert");
+                        ai3 = new AiRate(allHands[3].getStrHand(), Settings.aiName3);
                         ai3.fold = false;
                         allAi[2] = ai3;
                     }
@@ -599,10 +599,14 @@ public class GamePlay extends ActionBarActivity {
                     river.setImageResource(R.drawable.b1fv);
 
                     //setting up ante for pot and subtracting from both players
-                    subAnte(ante);
-
-                    pot.setText("pot: " + String.valueOf(ante * numPlayers));
-                    potValue = ante * numPlayers;
+                    if(Settings.anteOn) {
+                        subAnte(ante);
+                        potValue = ante * numPlayers;
+                    }
+                    else {
+                        potValue = 0;
+                    }
+                    pot.setText("pot: " + potValue);
                     aiRaisePot = 0;
 
                     bitDeck.enumRandom();
@@ -615,7 +619,7 @@ public class GamePlay extends ActionBarActivity {
                     //checks to see if money = 0
                     for (int l = 0; l < numPlayers - 1; l++) {
                         if (Settings.getIntMoney(allAi[l].aiName) <= 0) {
-                            Settings.addMoney(allAi[l].aiName, 1000);
+                            Settings.addMoney(allAi[l].aiName, 10000);
                             updateMoneyUI();
                         }
                     }
@@ -643,15 +647,15 @@ public class GamePlay extends ActionBarActivity {
     }
 
     public void subAnte( int ante) {
-        Settings.subMoney("ai", ante);
-        Settings.subMoney("Player 1", ante);
+        Settings.subMoney(Settings.aiName, ante);
+        Settings.subMoney("User", ante);
 
         if(numPlayers > 2) {
-            Settings.subMoney("ai2", ante);
+            Settings.subMoney(Settings.aiName2, ante);
         }
 
         if(numPlayers > 3) {
-            Settings.subMoney("ai3", ante);
+            Settings.subMoney(Settings.aiName3, ante);
         }
         updateMoneyUI();
     }
@@ -755,17 +759,17 @@ public class GamePlay extends ActionBarActivity {
         }
         if (winningHand >= 0) {
             if (winningHand == 0) {
-                winner.setText(userID + " Wins!");
+                winner.setText("You Win!");
             }
             else if(winningHand == 1){
-                winner.setText("Ai Wins!");
+                winner.setText(Settings.aiName + " Win!");
             }
             else if(winningHand == 2) {
-                winner.setText("Ai2 Wins!");
+                winner.setText(Settings.aiName2 + " Win!");
             }
 
             else {
-                winner.setText("Ai3 Wins!");
+                winner.setText(Settings.aiName3 + " Win!");
             }
         }
         //work on it's a tie
@@ -868,7 +872,6 @@ public class GamePlay extends ActionBarActivity {
                         allCommands[i].setText(allAi[i].aiName + " has called " + value);
                         allAi[i].currentBet = value;
                         allBets[i].setText(Integer.toString(allAi[i].currentBet));
-                        //subMoney(allAi[i].aiName, value);
                     } else {
                         allCommands[i].setText(allAi[i].aiName + " has checked");
                     }
@@ -913,15 +916,11 @@ public class GamePlay extends ActionBarActivity {
             aiRaisePot = lowestNum;
         }
 
-
-        //subMoney(aiName, aiRaisePot);
         updateMoneyUI();
     }
 
     public void doCall() {
         if(testButton.getText().equals("Call") || testButton.getText().equals("All in")) {
-            //subMoney("User"(),aiRaisePot);
-            //updateMoneyUI();
             userCurrentBet = aiRaisePot;
             userBet.setText(Integer.toString(userCurrentBet));
         }

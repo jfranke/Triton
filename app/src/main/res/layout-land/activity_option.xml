@@ -18,12 +18,11 @@
         android:layout_height="wrap_content"
         android:background="@android:drawable/btn_dropdown"
         android:spinnerMode="dropdown"
-        android:layout_marginTop="92dp"
-        android:layout_below="@+id/textview"
+        android:layout_alignTop="@+id/userID"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_toLeftOf="@+id/textview"
-        android:layout_toStartOf="@+id/textview" />
+        android:layout_alignRight="@+id/players"
+        android:layout_alignEnd="@+id/players" />
 
     <Button
         android:layout_width="wrap_content"
@@ -37,35 +36,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Number of Computers?"
+        android:text="Number of Opponents?"
         android:id="@+id/players"
-        android:layout_marginTop="57dp"
-        android:layout_below="@+id/textview"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="number"
-        android:ems="10"
-        android:id="@+id/startingMoney"
-        android:autoText="false"
-        android:hint="Greater than 1000"
-        android:layout_above="@+id/play"
+        android:layout_below="@+id/backButton"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:text="1000" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Money to Start"
-        android:id="@+id/money"
-        android:layout_above="@+id/startingMoney"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_marginTop="39dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -73,19 +49,19 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="Username"
         android:id="@+id/ID"
-        android:layout_alignTop="@+id/players"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignTop="@+id/textView"
+        android:layout_alignLeft="@+id/userID"
+        android:layout_alignStart="@+id/userID" />
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/userID"
-        android:layout_below="@+id/ID"
-        android:layout_alignRight="@+id/ID"
-        android:layout_alignEnd="@+id/ID"
         android:hint="Name to be called"
-        android:text="Minh" />
+        android:text="Minh"
+        android:layout_below="@+id/ID"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
     <ImageButton
         android:layout_width="wrap_content"
@@ -93,9 +69,9 @@
         android:id="@+id/volumeOptions"
         android:src="@drawable/volumeoption"
         android:layout_alignParentTop="true"
-        android:layout_alignRight="@+id/ID"
-        android:layout_alignEnd="@+id/ID"
-        android:background="@null"/>
+        android:background="@null"
+        android:layout_alignRight="@+id/userID"
+        android:layout_alignEnd="@+id/userID" />
 
     <ImageButton
         android:layout_width="wrap_content"
@@ -107,5 +83,57 @@
         android:src="@drawable/back"
         android:background="@null"
         android:onClick="goBack"/>
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/aiName"
+        android:text="John"
+        android:layout_alignTop="@+id/spinner1"
+        android:layout_alignLeft="@+id/textView"
+        android:layout_alignStart="@+id/textView"
+        android:layout_alignRight="@+id/textView"
+        android:layout_alignEnd="@+id/textView" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/aiName2"
+        android:text="Albert"
+        android:layout_below="@+id/userID"
+        android:layout_alignLeft="@+id/aiName"
+        android:layout_alignStart="@+id/aiName"
+        android:layout_alignRight="@+id/aiName"
+        android:layout_alignEnd="@+id/aiName" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/aiName3"
+        android:text="Susan"
+        android:layout_below="@+id/aiName2"
+        android:layout_alignLeft="@+id/aiName2"
+        android:layout_alignStart="@+id/aiName2"
+        android:layout_alignRight="@+id/aiName2"
+        android:layout_alignEnd="@+id/aiName2" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Name of Opponents"
+        android:id="@+id/textView"
+        android:layout_alignTop="@+id/players"
+        android:layout_alignRight="@+id/textview"
+        android:layout_alignEnd="@+id/textview" />
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ante On"
+        android:id="@+id/anteOnBox"
+        android:layout_centerVertical="true"
+        android:layout_alignLeft="@+id/userID"
+        android:layout_alignStart="@+id/userID" />
 
 </RelativeLayout>
