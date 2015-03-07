@@ -114,6 +114,7 @@ public class GamePlay extends ActionBarActivity {
 
     Boolean allIn;
     Boolean raiseFlag;
+    Boolean foldFlag;
 
     //music stuff
     public Intent music;
@@ -247,13 +248,12 @@ public class GamePlay extends ActionBarActivity {
 
         foldButton.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v) {
-                addWinner(1);
-                pot.setText("pot: " + potValue);
-                if(Settings.getIntMoney("User") <= 0) {
-                    popUp(v);
+                foldFlag = true;
+                while(!figureAi(0)) {
+                    numCallers++;
                 }
+                doEverything();
                 startOver();
-
             }
         });
 
@@ -565,6 +565,8 @@ public class GamePlay extends ActionBarActivity {
                     bitDeck = new Deck();
                     allIn = false;
                     raiseFlag = false;
+                    foldFlag = false;
+                    numCallers = 0;
 
                     //sets all hands and their pictures
                     for (int n = 0; n < numPlayers; n++) {
@@ -668,11 +670,11 @@ public class GamePlay extends ActionBarActivity {
             Settings.addMoney("User", potValue/2);
             Settings.addMoney("ai", potValue/2);
         }
-        else if (winner == 2){
+        else if (winner == 1){
             Settings.addMoney(ai.aiName, potValue);
         }
 
-        else if(winner == 3) {
+        else if(winner == 2) {
             Settings.addMoney(ai2.aiName, potValue);
         }
 
@@ -714,6 +716,9 @@ public class GamePlay extends ActionBarActivity {
     }
 
     public void doEverything() {
+        flop1.setImageResource(findPic(flopper[0]));
+        flop2.setImageResource(findPic(flopper[1]));
+        flop3.setImageResource(findPic(flopper[2]));
         turn.setImageResource(findPic(flopper[3]));
         river.setImageResource(findPic(flopper[4]));
 
@@ -722,6 +727,12 @@ public class GamePlay extends ActionBarActivity {
     }
 
     public void figureOutWinner() {
+        allHands[0].fold = foldFlag;
+
+        for(int k = 0; k < numPlayers - 1; k++) {
+            allHands[k+1].fold = allAi[k].fold;
+        }
+
         int[] hValues = new int[numPlayers];
 
         for (int j = 0; j < numPlayers; j++) {
@@ -732,7 +743,7 @@ public class GamePlay extends ActionBarActivity {
         int winningHand = 0;
         int winningValue = 0;
         for (int k = 0; k < numPlayers; k++) {
-            if (hValues[k] >= winningValue) {
+            if (hValues[k] >= winningValue && !allHands[k].fold) {
                 //check for tie
                 if (winningValue == hValues[k]) {
                     winningHand = -1;

@@ -23,6 +23,7 @@ public class Hand {
     public long hCards = 0; //bit mask for hand
     public long hKey = 1; //key for hand
     int wins = 0;
+    boolean fold = false;
 
     Hand() {}
     
