@@ -105,17 +105,16 @@ public class AiRate {
         }
 
         double checker = winRate - (betAmount/startingMoney * 100);
-
         if (checker < -15) {
-            return "fold";
+            return "FOLD";
         }
 
         else if (checker < 60) {
-            return "check";
+            return "CHECK";
         }
 
         else {
-            return "raise";
+            return "RAISE";
         }
     }
     public void printRate() {

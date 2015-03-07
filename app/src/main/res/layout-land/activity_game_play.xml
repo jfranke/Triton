@@ -22,9 +22,9 @@ android:paddingBottom="@dimen/activity_vertical_margin" tools:context="cse190.tr
     android:layout_height="wrap_content"
     android:text="who wins"
     android:id="@+id/winner"
-        android:layout_above="@+id/river"
-        android:layout_alignRight="@+id/raise"
-        android:layout_alignEnd="@+id/raise" />
+        android:layout_alignTop="@+id/pot"
+        android:layout_toRightOf="@+id/river"
+        android:layout_toEndOf="@+id/river" />
 
 
 <ImageView
@@ -33,9 +33,9 @@ android:paddingBottom="@dimen/activity_vertical_margin" tools:context="cse190.tr
     android:id="@+id/p1c1"
     android:visibility="visible"
     android:src="@drawable/b1fv"
-    android:layout_alignTop="@+id/raiseValue"
-    android:layout_toLeftOf="@+id/p1c2"
-    android:layout_toStartOf="@+id/p1c2" />
+    android:layout_above="@+id/playerID"
+    android:layout_alignLeft="@+id/flop3"
+    android:layout_alignStart="@+id/flop3" />
 
 <ImageView
     android:layout_width="wrap_content"
@@ -86,7 +86,7 @@ android:paddingBottom="@dimen/activity_vertical_margin" tools:context="cse190.tr
     android:layout_height="wrap_content"
     android:id="@+id/flop3"
     android:src="@drawable/b1fv"
-    android:layout_below="@+id/winner"
+    android:layout_alignTop="@+id/turn"
     android:layout_toLeftOf="@+id/turn"
     android:layout_toStartOf="@+id/turn" />
 
@@ -160,26 +160,15 @@ android:paddingBottom="@dimen/activity_vertical_margin" tools:context="cse190.tr
         android:layout_alignParentEnd="true"
         android:width="80dp" />
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="number"
-        android:ems="10"
-        android:id="@+id/raiseValue"
-        android:text="0"
-        android:layout_above="@+id/deal"
-        android:layout_alignLeft="@+id/fold"
-        android:layout_alignStart="@+id/fold" />
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="What ai does"
         android:id="@+id/aiCommands"
-        android:layout_alignTop="@+id/pot"
-        android:layout_alignRight="@+id/winner"
-        android:layout_alignEnd="@+id/winner" />
+        android:layout_above="@+id/river"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -351,21 +340,21 @@ android:paddingBottom="@dimen/activity_vertical_margin" tools:context="cse190.tr
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/raiseSeek"
-        android:layout_below="@+id/aiCommands3"
-        android:layout_alignLeft="@+id/raiseValue"
-        android:layout_alignStart="@+id/raiseValue"
-        android:layout_alignRight="@+id/aiCommands3"
-        android:layout_alignEnd="@+id/aiCommands3" />
+        android:layout_below="@+id/userBet"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignLeft="@+id/fold"
+        android:layout_alignStart="@+id/fold" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Small Text"
+        android:text="Raise Text"
         android:id="@+id/raiseNum"
-        android:layout_below="@+id/raiseSeek"
-        android:layout_alignRight="@+id/raiseValue"
-        android:layout_alignEnd="@+id/raiseValue" />
+        android:layout_alignTop="@+id/userBet"
+        android:layout_alignRight="@+id/raiseSeek"
+        android:layout_alignEnd="@+id/raiseSeek" />
 
 </RelativeLayout>
 

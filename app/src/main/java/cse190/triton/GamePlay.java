@@ -2,7 +2,6 @@
 package cse190.triton;
 
         import android.content.Intent;
-        import android.media.AudioManager;
         import android.support.v7.app.ActionBarActivity;
         import android.os.Bundle;
         import android.view.Gravity;
@@ -10,7 +9,6 @@ package cse190.triton;
         import android.view.Menu;
         import android.view.MenuItem;
         import android.view.View;
-        import android.widget.EditText;
         import android.widget.ImageButton;
         import android.widget.LinearLayout;
         import android.widget.PopupWindow;
@@ -101,7 +99,6 @@ public class GamePlay extends ActionBarActivity {
     ImageButton infoButton;
     ImageButton volumeOptions;
 
-    EditText raiseValue;
     int raisePot;
     int aiRaisePot;
     int numCallers = 0;
@@ -116,7 +113,7 @@ public class GamePlay extends ActionBarActivity {
     AiRate ai3;
     AiRate[] allAi = new AiRate[numPlayers - 1];
 
-    Boolean allIn;
+    Boolean userAllIn;
     Boolean raiseFlag;
     Boolean foldFlag;
 
@@ -154,8 +151,6 @@ public class GamePlay extends ActionBarActivity {
         foldButton = (Button) findViewById(R.id.fold);
         raiseButton = (Button) findViewById(R.id.raise);
         infoButton = (ImageButton) findViewById(R.id.questionmark);
-
-        raiseValue = (EditText)findViewById(R.id.raiseValue);
 
         //setting up player id and money
         playerID = (TextView) findViewById(R.id.playerID);
@@ -252,6 +247,7 @@ public class GamePlay extends ActionBarActivity {
         });
 
         raiseNum = (TextView) findViewById(R.id.raiseNum);
+        raiseNum.setText("0");
         numControl = (SeekBar) findViewById(R.id.raiseSeek);
         updateRaiseSeek();
 
@@ -274,9 +270,6 @@ public class GamePlay extends ActionBarActivity {
 
             public void onClick( View v) {
                 final int status = (int) v.getTag();
-
-                //betting on initial hands
-
                 if (status == 0) {
                     numCallers++;
                     doCall();
@@ -371,9 +364,6 @@ public class GamePlay extends ActionBarActivity {
                         } else {
                             startOver();
                         }
-
-                        numCallers = 0;
-                        testButton.setText("CHECK");
                     }
 
                 }
@@ -383,9 +373,7 @@ public class GamePlay extends ActionBarActivity {
                     if(Settings.getIntMoney("User") <= 0) {
                         popUp(v);
                     }
-
                     startOver();
-
                 }
 
             }
@@ -395,93 +383,58 @@ public class GamePlay extends ActionBarActivity {
         raiseButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 final int status = (int) testButton.getTag();
-                if (raiseValue.getText().toString().isEmpty()) {
-                    Toast.makeText(getApplicationContext(), "please pick a number to raise by",
-                            Toast.LENGTH_SHORT).show();
-                } else {
-                    raisePot = Integer.parseInt(raiseValue.getText().toString());
-                    if (status == 0) {
-                        if (checkRaise(raisePot)) {
-                            numCallers = 1;
-                            userCurrentBet = raisePot;
 
-                            if (figureAi(raisePot)) {
-                                doRaise();
-                                //set text that ai calls my raise
-                                flop1.setImageResource(findPic(flopper[0]));
-                                flop2.setImageResource(findPic(flopper[1]));
-                                flop3.setImageResource(findPic(flopper[2]));
-                                testButton.setTag(1);
-                                testButton.setText("CHECK");
-                                resetValues();
-                            }
-
-                        }
-
-                    } else if (status == 1) {
-                        if (checkRaise(raisePot)) {
-                            numCallers = 1;
-                            userCurrentBet = raisePot;
-
-                            if (figureAi(raisePot)) {
-                                doRaise();
-                                turn.setImageResource(findPic(flopper[3]));
-                                testButton.setTag(2);
-                                testButton.setText("CHECK");
-                                resetValues();
-                            }
-
-                        }
-                    } else if (status == 2) {
-                        if (checkRaise(raisePot)) {
-                            numCallers = 1;
-                            userCurrentBet = raisePot;
-                            if (figureAi(raisePot)) {
-                                doRaise();
-                                river.setImageResource(findPic(flopper[4]));
-                                testButton.setTag(3);
-                                testButton.setText("CHECK");
-                                resetValues();
-                            }
-                        }
-
-
-                    } else {
-                        if (checkRaise(raisePot)) {
-                            userCurrentBet = raisePot;
-                            numCallers = 1;
-                            if (figureAi(raisePot)) {
-                                doRaise();
-                                figureOutWinner();
-                                if (Settings.getIntMoney("User") == 0) {
-                                    popUp(v);
-                                } else {
-                                    startOver();
-                                }
-                                resetValues();
-                                testButton.setText("CHECK");
-                            }
-                        }
-
-                    }
-
-
-                    if (noMoreBetting()) {
-                        doEverything();
-                        if (Settings.getIntMoney("User") <= 0) {
-                            popUp(v);
-                        }
-
-                        startOver();
-
-                    }
+                if(getRaise() >= Settings.getIntMoney("User")) {
+                    userAllIn = true;
                 }
 
+                if(figureAi(getRaise())) {
+                    numCallers = 1;
+                    userCurrentBet = getRaise();
+                    testButton.setText("CHECK");
+                    doRaise();
+                    resetValues();
+
+                    if (status == 0) {
+                        flop1.setImageResource(findPic(flopper[0]));
+                        flop2.setImageResource(findPic(flopper[1]));
+                        flop3.setImageResource(findPic(flopper[2]));
+                        testButton.setTag(1);
+
+                    } else if (status == 1) {
+                        turn.setImageResource(findPic(flopper[3]));
+                        testButton.setTag(2);
+
+                    } else if (status == 2) {
+                        river.setImageResource(findPic(flopper[4]));
+                        testButton.setTag(3);
+
+                    } else {
+                        figureOutWinner();
+                        if (Settings.getIntMoney("User") == 0) {
+                            popUp(v);
+                        } else {
+                            startOver();
+                        }
+                    }
+                }
+                if (noMoreBetting()) {
+                    doEverything();
+                    if (Settings.getIntMoney("User") <= 0) {
+                        popUp(v);
+                    }
+
+                    startOver();
+
+                }
+                updateRaiseSeek();
             }
+
+
         });
 
 
-    }
+}
 
 
     @Override
@@ -539,6 +492,7 @@ public class GamePlay extends ActionBarActivity {
         //set cards to array and remove cards from deck
         allHands[player] = new Hand(tempLong);
         bitDeck.removeCards(allHands[player].hCards);
+        allHands[player].fold = false;
 
     }
 
@@ -570,10 +524,13 @@ public class GamePlay extends ActionBarActivity {
                     aiCommands3.setText("");
                     deck = shuffleCards();
                     bitDeck = new Deck();
-                    allIn = false;
+                    userAllIn = false;
                     raiseFlag = false;
                     foldFlag = false;
                     numCallers = 0;
+                    minRaise = 0;
+                    testButton.setText("CHECK");
+                    updateRaiseSeek();
 
                     //sets all hands and their pictures
                     for (int n = 0; n < numPlayers; n++) {
@@ -754,7 +711,9 @@ public class GamePlay extends ActionBarActivity {
         int winningHand = 0;
         int winningValue = 0;
         for (int k = 0; k < numPlayers; k++) {
+            System.out.println("this hand " + k + "folded =" + !allHands[k].fold);
             if (hValues[k] >= winningValue && !allHands[k].fold) {
+                System.out.println("k is " + k);
                 //check for tie
                 if (winningValue == hValues[k]) {
                     winningHand = -1;
@@ -783,6 +742,10 @@ public class GamePlay extends ActionBarActivity {
         else {
             winner.setText("It's a tie!");
         }
+
+        aiCommands.setText("");
+        aiCommands2.setText("");
+        aiCommands3.setText("");
         addWinner(winningHand);
     }
 
@@ -856,8 +819,9 @@ public class GamePlay extends ActionBarActivity {
                 break;
             }
             if(!allAi[i].fold) {
+                System.out.println("value is " + value);
                 String command = allAi[i].whatToDo(value);
-                if (command.equals("raise") && !allIn) {
+                if (command.equals("RAISE") && !userAllIn) {
                     numCallers = 1;
                     doAiRaise(value);
                     allAi[i].currentBet = aiRaisePot;
@@ -865,7 +829,6 @@ public class GamePlay extends ActionBarActivity {
                     allBets[i].setText(Integer.toString(allAi[i].currentBet));
 
                     if (aiRaisePot == Settings.getIntMoney("User")) {
-                        allIn = true;
                         testButton.setText("All in");
                         raiseButton.setEnabled(false);
                     } else {
@@ -874,7 +837,7 @@ public class GamePlay extends ActionBarActivity {
                         testButton.setText("CALL");
                     }
                     raiseFlag = true;
-                } else if (command.equals("CHECK") ) {
+                } else if (command.equals("CHECK") || (command.equals("RAISE") && !userAllIn)) {
                     numCallers++;
                     allAi[i].currentBet = value;
                     if (value > 0) {
@@ -906,7 +869,6 @@ public class GamePlay extends ActionBarActivity {
             raiseFlag = false;
         }
 
-        System.out.println("flag: " + !raiseFlag);
         return !raiseFlag;
     }
 
@@ -939,6 +901,7 @@ public class GamePlay extends ActionBarActivity {
         subMoney("User", userCurrentBet);
         userBet.setText("");
         updateMoneyUI();
+        updateRaiseSeek();
         userCurrentBet = 0;
     }
 
@@ -991,7 +954,7 @@ public class GamePlay extends ActionBarActivity {
     }
 
     public void updateRaiseSeek() {
-        numControl.setMax(Settings.getIntMoney("User") - minRaise);
+        numControl.setMax(Settings.getIntMoney("User") - minRaise - 1);
         numControl.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
             @Override
@@ -1006,9 +969,9 @@ public class GamePlay extends ActionBarActivity {
 
             @Override
             public void onProgressChanged(SeekBar arg0, int arg1, boolean arg2) {
-                raiseNum.setText((Integer.toString(arg1 + minRaise)));
+                raiseNum.setText(Integer.toString(arg1 + minRaise + 1));
 
-                if((arg1 + minRaise) == Settings.getIntMoney("User")) {
+                if((arg1 + minRaise) == Settings.getIntMoney("User") ) {
                     raiseButton.setText("ALL IN");
                 }
 
@@ -1016,8 +979,11 @@ public class GamePlay extends ActionBarActivity {
                     raiseButton.setText("RAISE");
                 }
             }
-
         });
+    }
+
+    public int getRaise() {
+        return Integer.parseInt(raiseNum.getText().toString());
     }
 
     public int findPic(String cardStr) {
