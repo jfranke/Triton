@@ -269,7 +269,7 @@ public class GamePlay extends ActionBarActivity {
                     doCall();
                     if (numCallers < numPlayers) {
                         //if ai checks then continue
-                        if (figureAi(0) == 2) {
+                        if (figureAi(0)) {
                             //set text that ai checked
                             flop1.setImageResource(findPic(flopper[0]));
                             flop2.setImageResource(findPic(flopper[1]));
@@ -294,7 +294,7 @@ public class GamePlay extends ActionBarActivity {
                     doCall();
                     if (numCallers < numPlayers) {
                         //if ai checks then continue
-                        if (figureAi(0) == 2) {
+                        if (figureAi(0)) {
                             //set text that ai checked
                             turn.setImageResource(findPic(flopper[3]));
                             v.setTag(2);
@@ -316,7 +316,7 @@ public class GamePlay extends ActionBarActivity {
                     doCall();
                     if (numCallers < numPlayers) {
                         //if ai checks then continue
-                        if (figureAi(0) == 2) {
+                        if (figureAi(0)) {
                             //set text that ai checked
                             river.setImageResource(findPic(flopper[4]));
                             v.setTag(3);
@@ -336,7 +336,7 @@ public class GamePlay extends ActionBarActivity {
                     doCall();
                     if (numCallers < numPlayers) {
                         //if ai checks then continue
-                        if (figureAi(0) == 2) {
+                        if (figureAi(0)) {
                             resetValues();
                             figureOutWinner();
                             if (Settings.getIntMoney("User") == 0) {
@@ -382,138 +382,95 @@ public class GamePlay extends ActionBarActivity {
         raiseButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 final int status = (int) testButton.getTag();
-                raisePot = Integer.parseInt(raiseValue.getText().toString());
-                //betting on initial hands
+                if (raiseValue.getText().toString().isEmpty()) {
+                    Toast.makeText(getApplicationContext(), "please pick a number to raise by",
+                            Toast.LENGTH_SHORT).show();
+                } else {
+                    raisePot = Integer.parseInt(raiseValue.getText().toString());
+                    if (status == 0) {
+                        if (checkRaise(raisePot)) {
+                            numCallers = 1;
+                            userCurrentBet = raisePot;
 
-                if (status == 0) {
-
-                    if (checkRaise(raisePot)) {
-                        numCallers++;
-                        doCall();
-                        if (numCallers < numPlayers) {
-                            //if ai checks then continue
-                            if (figureAi(raisePot) == 2) {
-                                //set text that ai checked
+                            if (figureAi(raisePot)) {
+                                System.out.println("Im in 1");
+                                doRaise();
+                                //set text that ai calls my raise
                                 flop1.setImageResource(findPic(flopper[0]));
                                 flop2.setImageResource(findPic(flopper[1]));
                                 flop3.setImageResource(findPic(flopper[2]));
-                                doRaise();
-                                v.setTag(1);
-                                numCallers = 0;
+                                testButton.setTag(1);
                                 testButton.setText("Check");
+                                resetValues();
                             }
 
                         }
-                        //if ai calls already then you just show
-                        else {
-                            flop1.setImageResource(findPic(flopper[0]));
-                            flop2.setImageResource(findPic(flopper[1]));
-                            flop3.setImageResource(findPic(flopper[2]));
-                            doRaise();
-                            v.setTag(1);
-                            numCallers = 0;
-                            testButton.setText("Check");
-                        }
 
-                    }
+                    } else if (status == 1) {
+                        if (checkRaise(raisePot)) {
+                            numCallers = 1;
+                            userCurrentBet = raisePot;
 
-                } else if (status == 1) {
-                    if (checkRaise(raisePot)) {
-                        numCallers++;
-                        doCall();
-                        if (numCallers < numPlayers) {
-                            //if ai checks then continue
-                            if (figureAi(0) == 2) {
-                                //set text that ai checked
+                            if (figureAi(raisePot)) {
+                                System.out.println("Im in 2");
+                                doRaise();
                                 turn.setImageResource(findPic(flopper[3]));
-                                v.setTag(2);
-                                numCallers = 0;
+                                testButton.setTag(2);
                                 testButton.setText("Check");
-                                doRaise();
+                                resetValues();
                             }
 
                         }
-                        //if ai calls already then you just show
-                        else {
-                            turn.setImageResource(findPic(flopper[3]));
-                            v.setTag(2);
-                            numCallers = 0;
-                            testButton.setText("Check");
-                            doRaise();
-                        }
-                    }
-                } else if (status == 2) {
+                    } else if (status == 2) {
 
-                    if (checkRaise(raisePot)) {
-                        numCallers++;
-                        doCall();
-                        if (numCallers < numPlayers) {
-                            //if ai checks then continue
-                            if (figureAi(raisePot) == 2) {
-                                //set text that ai checked
+                        if (checkRaise(raisePot)) {
+                            numCallers = 1;
+                            userCurrentBet = raisePot;
+                            if (figureAi(raisePot)) {
+                                System.out.println("Im in 3");
+                                doRaise();
                                 river.setImageResource(findPic(flopper[4]));
-                                v.setTag(3);
-                                numCallers = 0;
+                                testButton.setTag(3);
                                 testButton.setText("Check");
+                                resetValues();
+                            }
+                        }
+
+
+                    } else {
+                        if (checkRaise(raisePot)) {
+                            userCurrentBet = raisePot;
+                            numCallers = 1;
+                            if (figureAi(raisePot)) {
+                                System.out.println("Im in 4");
+                                //set text that ai checked
                                 doRaise();
+                                figureOutWinner();
+                                if (Settings.getIntMoney("User") == 0) {
+                                    popUp(v);
+                                } else {
+                                    startOver();
+                                }
+                                resetValues();
+                                testButton.setText("Check");
                             }
-
-                        }
-                        //if ai calls already then you just show
-                        else {
-                            river.setImageResource(findPic(flopper[4]));
-                            v.setTag(3);
-                            numCallers = 0;
-                            testButton.setText("Check");
-                            doRaise();
-                        }
-                    }
-                } else {
-                    if (checkRaise(raisePot)) {
-                        //if ai checks then continue
-                        if (figureAi(0) == 2) {
-                            //set text that ai checked
-                            doRaise();
-                            figureOutWinner();
-                            if (Settings.getIntMoney("User") == 0) {
-                                popUp(v);
-                            } else {
-                                startOver();
-                            }
-                            numCallers = 0;
-                            testButton.setText("Check");
                         }
 
                     }
-                    //if ai calls already then you just show
-                    else {
-                        doRaise();
-                        figureOutWinner();
-                        if (Settings.getIntMoney("User") == 0) {
+
+
+                    if (noMoreBetting()) {
+                        doEverything();
+                        if (Settings.getIntMoney("User") <= 0) {
                             popUp(v);
-                        } else {
-                            startOver();
                         }
 
-                        numCallers = 0;
-                        testButton.setText("Check");
-                    }
+                        startOver();
 
+                    }
                 }
 
-
-                if (noMoreBetting()) {
-                    doEverything();
-                    if (Settings.getIntMoney("User") <= 0) {
-                        popUp(v);
-                    }
-
-                    startOver();
-
-                }
             }
-
-
         });
 
 
@@ -739,16 +696,13 @@ public class GamePlay extends ActionBarActivity {
             return false;
         }
 
-        if (raisePot > Settings.getIntMoney("ai")) {
-            raisePot = Settings.getIntMoney("ai");
-        }
-
         return true;
     }
 
     public void doRaise() {
-        subMoney("User", raisePot);
+        subMoney("User", userCurrentBet);
         raisePot = 0;
+        userCurrentBet = 0;
 
         if(noMoreBetting()) {
             testButton.setEnabled(false);
@@ -866,12 +820,19 @@ public class GamePlay extends ActionBarActivity {
         startActivity(intent);
     }
 
-    public int figureAi(int playerRaise) {
+    public boolean figureAi(int playerRaise) {
+        int value;
         for (int i = 0; i < numPlayers - 1; i++) {
-            if(numCallers == numPlayers) {
+            if (playerRaise < aiRaisePot) {
+                value = aiRaisePot;
+            }
+            else {
+                value = playerRaise;
+            }
+
+            if(numCallers >= numPlayers) {
                 break;
             }
-            int value = aiRaisePot + playerRaise;
             if(!allAi[i].fold) {
                 String command = allAi[i].whatToDo(value);
                 if (command.equals("raise") && !allIn) {
@@ -885,6 +846,7 @@ public class GamePlay extends ActionBarActivity {
                         allIn = true;
                         testButton.setText("All in");
                     } else {
+                        System.out.println("Setting text to call");
                         testButton.setText("Call");
                     }
                     raiseFlag = true;
@@ -921,12 +883,8 @@ public class GamePlay extends ActionBarActivity {
             raiseFlag = false;
         }
 
-        if(raiseFlag) {
-            return 1;
-        }
-        else {
-            return 2;
-        }
+        System.out.println("flag: " + !raiseFlag);
+        return !raiseFlag;
     }
 
     public void doAiRaise(int value) {

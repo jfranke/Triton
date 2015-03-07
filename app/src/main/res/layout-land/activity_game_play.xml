@@ -162,10 +162,10 @@ android:paddingBottom="@dimen/activity_vertical_margin" tools:context="cse190.tr
         android:inputType="number"
         android:ems="10"
         android:id="@+id/raiseValue"
+        android:text="0"
         android:layout_above="@+id/deal"
-        android:layout_toRightOf="@+id/winner"
-        android:layout_toEndOf="@+id/winner"
-        android:text="0" />
+        android:layout_alignLeft="@+id/fold"
+        android:layout_alignStart="@+id/fold" />
 
     <TextView
         android:layout_width="wrap_content"

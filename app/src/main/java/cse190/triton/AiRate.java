@@ -74,7 +74,6 @@ public class AiRate {
 
         winRate = winPercentage;
         startingMoney = Settings.getIntMoney("User");
-        System.out.println(startingMoney);
         aiName = name;
         fold = false;
         currentBet = 0;
