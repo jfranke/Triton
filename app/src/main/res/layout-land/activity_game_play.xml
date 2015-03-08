@@ -356,5 +356,46 @@ android:paddingBottom="@dimen/activity_vertical_margin" tools:context="cse190.tr
         android:layout_alignRight="@+id/raiseSeek"
         android:layout_alignEnd="@+id/raiseSeek" />
 
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/dealer2"
+        android:src="@drawable/dealer"
+        android:layout_above="@+id/aiBet"
+        android:layout_toLeftOf="@+id/p3c1"
+        android:layout_toStartOf="@+id/p3c1"
+        android:visibility="visible"
+        android:background="@null"/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/dealer"
+        android:src="@drawable/dealer"
+        android:layout_above="@+id/playerID"
+        android:layout_toLeftOf="@+id/p1c1"
+        android:layout_toStartOf="@+id/p1c1"
+        android:background="@null"/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/dealer3"
+        android:src="@drawable/dealer"
+        android:background="@null"
+        android:layout_above="@+id/aiBet2"
+        android:layout_alignRight="@+id/flop2"
+        android:layout_alignEnd="@+id/flop2" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/dealer4"
+        android:src="@drawable/dealer"
+        android:background="@null"
+        android:layout_above="@+id/aiBet3"
+        android:layout_toLeftOf="@+id/p4c1"
+        android:layout_toStartOf="@+id/p4c1" />
+
 </RelativeLayout>
 

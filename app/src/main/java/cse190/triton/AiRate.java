@@ -8,7 +8,6 @@ import java.util.Random;
 
 public class AiRate {
     double winRate;
-    double startingMoney;
     String aiName;
     Boolean fold;
     int currentBet;
@@ -73,7 +72,6 @@ public class AiRate {
         winPercentage = (double) Math.round(winPercentage * 10) / 10;
 
         winRate = winPercentage;
-        startingMoney = Settings.getIntMoney("User");
         aiName = name;
         fold = false;
         currentBet = 0;
@@ -104,7 +102,8 @@ public class AiRate {
             winRate = winRate + 20;
         }
 
-        double checker = winRate - (betAmount/startingMoney * 100);
+        double checker = winRate - (betAmount/Settings.getHandStartingMoney() * 100);
+
         if (checker < -15) {
             return "FOLD";
         }

@@ -87,6 +87,12 @@ public class GamePlay extends ActionBarActivity {
     ImageView river;
     ImageView[] picHands = new ImageView[8];
 
+    ImageView dealer;
+    ImageView dealer2;
+    ImageView dealer3;
+    ImageView dealer4;
+    ImageView[] dealerPic = new ImageView[4];
+
     List<Integer> deck = shuffleCards();
     Deck bitDeck = new Deck();
     Hand[] allHands =  new Hand[numPlayers];
@@ -105,6 +111,9 @@ public class GamePlay extends ActionBarActivity {
     String[] flopper;
     int userCurrentBet = 0;
 
+    int bigBlindNum = 200;
+    int smallBlindNum = 100;
+
     LinearLayout layout;
     LinearLayout mainLayout;
 
@@ -118,6 +127,12 @@ public class GamePlay extends ActionBarActivity {
     Boolean foldFlag;
 
     SeekBar numControl;
+
+    ArrayList<Integer>  tieWinners;
+    String[] tieWinnersNames;
+
+    int dealerNum = 0;
+    int startBetter;
 
     //music stuff
     public Intent music;
@@ -208,6 +223,16 @@ public class GamePlay extends ActionBarActivity {
         picHands[6] = p4c1;
         picHands[7] = p4c2;
 
+        dealer = (ImageView) findViewById(R.id.dealer);
+        dealer2 = (ImageView) findViewById(R.id.dealer2);
+        dealer3 = (ImageView) findViewById(R.id.dealer3);
+        dealer4 = (ImageView) findViewById(R.id.dealer4);
+
+        dealerPic[0] = dealer;
+        dealerPic[1] = dealer2;
+        dealerPic[2] = dealer3;
+        dealerPic[3] = dealer4;
+
         if(numPlayers < 4 ) {
             p4c1.setImageDrawable(null);
             p4c2.setImageDrawable(null);
@@ -251,16 +276,13 @@ public class GamePlay extends ActionBarActivity {
         numControl = (SeekBar) findViewById(R.id.raiseSeek);
         updateRaiseSeek();
 
-        System.out.println(foldButton.getTextSize());
-        System.out.println(testButton.getTextSize());
-        System.out.println(raiseButton.getTextSize());
-
         foldButton.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v) {
                 foldFlag = true;
-                while(!figureAi(0)) {
+                while(!figureAi(0, 0)) {
                     numCallers++;
                 }
+                subCurrentBet();
                 doEverything();
                 startOver();
             }
@@ -275,7 +297,7 @@ public class GamePlay extends ActionBarActivity {
                     doCall();
                     if (numCallers < numPlayers) {
                         //if ai checks then continue
-                        if (figureAi(0)) {
+                        if (figureAi(userCurrentBet, 0)) {
                             //set text that ai checked
                             flop1.setImageResource(findPic(flopper[0]));
                             flop2.setImageResource(findPic(flopper[1]));
@@ -300,7 +322,7 @@ public class GamePlay extends ActionBarActivity {
                     doCall();
                     if (numCallers < numPlayers) {
                         //if ai checks then continue
-                        if (figureAi(0)) {
+                        if (figureAi(userCurrentBet, 0)) {
                             //set text that ai checked
                             turn.setImageResource(findPic(flopper[3]));
                             v.setTag(2);
@@ -322,7 +344,7 @@ public class GamePlay extends ActionBarActivity {
                     doCall();
                     if (numCallers < numPlayers) {
                         //if ai checks then continue
-                        if (figureAi(0)) {
+                        if (figureAi(userCurrentBet, 0)) {
                             //set text that ai checked
                             river.setImageResource(findPic(flopper[4]));
                             v.setTag(3);
@@ -342,7 +364,7 @@ public class GamePlay extends ActionBarActivity {
                     doCall();
                     if (numCallers < numPlayers) {
                         //if ai checks then continue
-                        if (figureAi(0)) {
+                        if (figureAi(0, 0)) {
                             resetValues();
                             figureOutWinner();
                             if (Settings.getIntMoney("User") == 0) {
@@ -388,7 +410,7 @@ public class GamePlay extends ActionBarActivity {
                     userAllIn = true;
                 }
 
-                if(figureAi(getRaise())) {
+                if(figureAi(getRaise(), 0)) {
                     numCallers = 1;
                     userCurrentBet = getRaise();
                     testButton.setText("CHECK");
@@ -518,6 +540,8 @@ public class GamePlay extends ActionBarActivity {
             myHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
+                    userCurrentBet = 0;
+                    userBet.setText("");
                     winner.setText("");
                     aiCommands.setText("");
                     aiCommands2.setText("");
@@ -529,6 +553,7 @@ public class GamePlay extends ActionBarActivity {
                     foldFlag = false;
                     numCallers = 0;
                     minRaise = 0;
+                    aiRaisePot = 0;
                     testButton.setText("CHECK");
                     updateRaiseSeek();
 
@@ -543,15 +568,14 @@ public class GamePlay extends ActionBarActivity {
                     if (numPlayers > 2) {
                         ai2 = new AiRate(allHands[2].getStrHand(), Settings.aiName2);
                         ai2.fold = false;
-                        allAi[0] = ai2;
-                        allAi[1] = ai;
+                        allAi[1] = ai2;
                     }
                     if(numPlayers > 3) {
                         ai3 = new AiRate(allHands[3].getStrHand(), Settings.aiName3);
                         ai3.fold = false;
                         allAi[2] = ai3;
                     }
-
+                    figureOutBlinds();
 
                     Grader teacher = new Grader(allHands[0].getStrHand());
                     grade.setText(teacher.returnGrade());
@@ -571,7 +595,6 @@ public class GamePlay extends ActionBarActivity {
                         potValue = 0;
                     }
                     pot.setText("pot: " + potValue);
-                    aiRaisePot = 0;
 
                     bitDeck.enumRandom();
                     long flopCards = bitDeck.getBoard();
@@ -587,6 +610,16 @@ public class GamePlay extends ActionBarActivity {
                             updateMoneyUI();
                         }
                     }
+
+                    Settings.setHandStartingMoney();
+                    if(startBetter != 0) {
+                        figureAi(bigBlindNum, startBetter - 1);
+                    }
+
+                    if(!allHands[0].bigBlind) {
+                        testButton.setText("CALL");
+                    }
+
 
                 }
             }, 5000);
@@ -634,10 +667,6 @@ public class GamePlay extends ActionBarActivity {
             Settings.addMoney("User", potValue);
         }
 
-        else if (winner == -1) {
-            Settings.addMoney("User", potValue/2);
-            Settings.addMoney("ai", potValue/2);
-        }
         else if (winner == 1){
             Settings.addMoney(ai.aiName, potValue);
         }
@@ -646,27 +675,17 @@ public class GamePlay extends ActionBarActivity {
             Settings.addMoney(ai2.aiName, potValue);
         }
 
-        else {
+        else if (winner == 3) {
             Settings.addMoney(ai3.aiName, potValue);
         }
+
+        else {
+
+            for (int y = 0; y < tieWinnersNames.length; y++) {
+                Settings.addMoney(tieWinnersNames[y], potValue/tieWinnersNames.length);
+            }
+        }
         updateMoneyUI();
-    }
-
-    public boolean checkRaise(int raise) {
-        if (raise > Settings.getIntMoney("User") ) {
-            Toast.makeText(getApplicationContext(), "Raise amount is higher than you have. Max bet is " + Integer.parseInt(Settings.getMoney("User")),
-                    Toast.LENGTH_SHORT).show();
-
-            return false;
-        }
-
-        else if(raise <= 0) {
-            Toast.makeText(getApplicationContext(), "You must raise more than 0",
-                    Toast.LENGTH_SHORT).show();
-            return false;
-        }
-
-        return true;
     }
 
     public void doRaise() {
@@ -711,15 +730,15 @@ public class GamePlay extends ActionBarActivity {
         int winningHand = 0;
         int winningValue = 0;
         for (int k = 0; k < numPlayers; k++) {
-            System.out.println("this hand " + k + "folded =" + !allHands[k].fold);
             if (hValues[k] >= winningValue && !allHands[k].fold) {
-                System.out.println("k is " + k);
-                //check for tie
                 if (winningValue == hValues[k]) {
                     winningHand = -1;
+                    tieWinners.add(k);
                 } else {
                     winningValue = hValues[k];
                     winningHand = k;
+                    tieWinners = new ArrayList<Integer>();
+                    tieWinners.add(k);
                 }
             }
         }
@@ -728,19 +747,51 @@ public class GamePlay extends ActionBarActivity {
                 winner.setText("You Win!");
             }
             else if(winningHand == 1){
-                winner.setText(Settings.aiName + " Win!");
+                winner.setText(Settings.aiName + " Wins!");
             }
             else if(winningHand == 2) {
-                winner.setText(Settings.aiName2 + " Win!");
+                winner.setText(Settings.aiName2 + " Wins!");
             }
 
             else {
-                winner.setText(Settings.aiName3 + " Win!");
+                winner.setText(Settings.aiName3 + " Wins!");
             }
         }
         //work on it's a tie
         else {
-            winner.setText("It's a tie!");
+            String tieText = "It's a tie between ";
+            tieWinnersNames = new String[tieWinners.size()];
+            for (int w = 0; w < tieWinners.size(); w++) {
+                int winningNum = tieWinners.get(w);
+
+                if(winningNum == 0) {
+                    tieWinnersNames[w] = "you";
+                }
+
+                else if(winningNum == 1) {
+                    tieWinnersNames[w] = Settings.aiName;
+                }
+
+                else if(winningNum == 2) {
+                    tieWinnersNames[w] =  Settings.aiName2;
+                }
+
+                else {
+                    tieWinnersNames[w] =  Settings.aiName3;
+                }
+            }
+
+            if(tieWinners.size() == 4) {
+                winner.setText("It's a tie between " + tieWinnersNames[0] + ", " + tieWinnersNames[1]
+                        + ", " + tieWinnersNames[2] + " and " + tieWinnersNames[3]);
+            }
+            else if(tieWinners.size() == 3) {
+                winner.setText("It's a tie between " + tieWinnersNames[0] + ", " + tieWinnersNames[1]
+                        + " and " + tieWinnersNames[2]);
+            }
+            else  {
+                winner.setText("It's a tie between " + tieWinnersNames[0] + " and " + tieWinnersNames[1]);
+            }
         }
 
         aiCommands.setText("");
@@ -805,9 +856,9 @@ public class GamePlay extends ActionBarActivity {
         startActivity(intent);
     }
 
-    public boolean figureAi(int playerRaise) {
+    public boolean figureAi(int playerRaise, int starter) {
         int value;
-        for (int i = 0; i < numPlayers - 1; i++) {
+        for (int i = starter; i < numPlayers - 1; i++) {
             if (playerRaise < aiRaisePot) {
                 value = aiRaisePot;
             }
@@ -819,7 +870,6 @@ public class GamePlay extends ActionBarActivity {
                 break;
             }
             if(!allAi[i].fold) {
-                System.out.println("value is " + value);
                 String command = allAi[i].whatToDo(value);
                 if (command.equals("RAISE") && !userAllIn) {
                     numCallers = 1;
@@ -840,13 +890,14 @@ public class GamePlay extends ActionBarActivity {
                 } else if (command.equals("CHECK") || (command.equals("RAISE") && !userAllIn)) {
                     numCallers++;
                     allAi[i].currentBet = value;
+                    aiRaisePot = value;
                     if (value > 0) {
                         allCommands[i].setText(allAi[i].aiName + " has called " + value);
                         allAi[i].currentBet = value;
-                        allBets[i].setText(Integer.toString(allAi[i].currentBet));
                     } else {
                         allCommands[i].setText(allAi[i].aiName + " has checked");
                     }
+                    allBets[i].setText(Integer.toString(allAi[i].currentBet));
                 } else {
                     numCallers++;
                     allAi[i].fold = true;
@@ -951,6 +1002,14 @@ public class GamePlay extends ActionBarActivity {
         aiRaisePot = 0;
         subCurrentBet();
         subAiBets();
+        /*for (int g = 0; g < numPlayers - 1; g++) {
+            allCommands[g].setText("");
+        }*/
+        if (startBetter != 0) {
+            figureAi(0, startBetter - 1);
+        }
+        Settings.setHandStartingMoney();
+
     }
 
     public void updateRaiseSeek() {
@@ -984,6 +1043,76 @@ public class GamePlay extends ActionBarActivity {
 
     public int getRaise() {
         return Integer.parseInt(raiseNum.getText().toString());
+    }
+
+    public void figureOutBlinds() {
+        for(int q = 0; q < numPlayers - 1; q++) {
+            allHands[q].smallBlind = false;
+            allHands[q].bigBlind = false;
+            allHands[q].startBetting = false;
+        }
+
+        if(dealerNum + 1 > numPlayers - 1) {
+            allHands[(dealerNum + 1) % numPlayers].smallBlind = true;
+        }
+        else {
+            allHands[dealerNum + 1].smallBlind = true;
+        }
+
+        if(dealerNum + 2 > numPlayers - 1) {
+            allHands[(dealerNum + 2) % numPlayers].bigBlind = true;
+        }
+        else {
+            allHands[dealerNum + 2].bigBlind = true;
+        }
+        if(dealerNum + 3 > numPlayers - 1) {
+            allHands[(dealerNum + 3) % numPlayers].startBetting = true;
+        }
+        else {
+            allHands[dealerNum + 3].startBetting = true;
+        }
+
+        for(int d = 0; d < numPlayers; d++) {
+            if(allHands[d].bigBlind) {
+                if(d == 0) {
+                    userCurrentBet = bigBlindNum;
+                }
+                else {
+                    allAi[d-1].currentBet = bigBlindNum;
+                }
+            }
+
+            if(allHands[d].smallBlind) {
+                if(d == 0) {
+                    userCurrentBet = smallBlindNum;
+                }
+                else {
+                    allAi[d-1].currentBet = smallBlindNum;
+                }
+            }
+            if(allHands[d].startBetting) {
+                startBetter = d;
+            }
+            dealerPic[d].setVisibility(View.GONE);
+        }
+        dealerPic[dealerNum].setVisibility(View.VISIBLE);
+        setAiCurrentBet();
+        dealerNum++;
+        if(dealerNum > numPlayers - 1) {
+            dealerNum = 0;
+        }
+        aiRaisePot = bigBlindNum;
+    }
+
+    public void setAiCurrentBet() {
+        if(userCurrentBet > 0) {
+            userBet.setText(String.valueOf(userCurrentBet));
+        }
+        for (int w = 0; w < numPlayers - 1; w++) {
+            if(allAi[w].currentBet > 0) {
+                allBets[w].setText(String.valueOf(allAi[w].currentBet));
+            }
+        }
     }
 
     public int findPic(String cardStr) {

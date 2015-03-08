@@ -24,6 +24,9 @@ public class Hand {
     public long hKey = 1; //key for hand
     int wins = 0;
     boolean fold = false;
+    boolean bigBlind = false;
+    boolean smallBlind = false;
+    boolean startBetting = false;
 
     Hand() {}
     

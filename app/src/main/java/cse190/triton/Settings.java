@@ -12,6 +12,7 @@ public class Settings {
     static String aiName2 = "";
     static String aiName3 = "";
     static boolean anteOn = false;
+    static int handStartingMoney = 0;
 
     public static int getNumPlayers() {
         return numPlayers;
@@ -108,6 +109,13 @@ public class Settings {
         }
     }
 
+    public static void setHandStartingMoney() {
+        handStartingMoney = getIntMoney("User");
+    }
+
+    public static int getHandStartingMoney() {
+        return handStartingMoney;
+    }
 
     public static void resetMonies() {
         aiMoney = "100000";
