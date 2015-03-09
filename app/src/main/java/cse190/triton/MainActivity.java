@@ -1,18 +1,34 @@
 package cse190.triton;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
+import android.net.Uri;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Base64;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
-public class MainActivity extends ActionBarActivity {
+import com.facebook.AppEventsLogger;
+import com.facebook.widget.LoginButton;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
+
+public class MainActivity extends FragmentActivity {
     ImageButton volumeOptions;
     LinearLayout layout;
     LinearLayout mainLayout;
+    private MainFragment mainFragment;
 
     Intent music;
     ServiceConnectionBinder service = new ServiceConnectionBinder(this);
@@ -20,6 +36,18 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState == null) {
+            // Add the fragment on initial activity setup
+            mainFragment = new MainFragment();
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .add(android.R.id.content, mainFragment)
+                    .commit();
+        } else {
+            // Or set the fragment from restored state info
+            mainFragment = (MainFragment) getSupportFragmentManager()
+                    .findFragmentById(android.R.id.content);
+        }
         setContentView(R.layout.activity_main);
 
         //music service
@@ -38,7 +66,12 @@ public class MainActivity extends ActionBarActivity {
                 SoundOptions.doPopUp(getBaseContext(), v, layout, mainLayout);
             }
         });
+
+        LoginButton authButton = (LoginButton) findViewById(R.id.authButton);
+        authButton.setReadPermissions(Arrays.asList("public_profile"));
     }
+
+
 
 
 
@@ -73,11 +106,22 @@ public class MainActivity extends ActionBarActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+
+        // Logs 'install' and 'app activate' App Events.
+        AppEventsLogger.activateApp(this);
+    }
+
+    @Override
     public void onPause() {
+        super.onPause();
         service.doUnbindService();
         service.getConnectionService().onDestroy();
         stopService(music);
-        super.onPause();
+        // Logs 'app deactivate' App Event.
+        AppEventsLogger.deactivateApp(this);
     }
+
 
 }

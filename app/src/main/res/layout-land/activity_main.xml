@@ -3,16 +3,20 @@
     android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin" tools:context="cse190.triton.MainActivity">
+    android:paddingBottom="@dimen/activity_vertical_margin" tools:context="cse190.triton.MainActivity"
+    android:background="@drawable/titlebackground">
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Play TritonPoker"
         android:id="@+id/play"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
-        android:onClick="goOptions"/>
+        android:onClick="goOptions"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="75dp"
+        android:layout_marginStart="75dp" />
 
     <ImageButton
         android:layout_width="wrap_content"
@@ -25,5 +29,14 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:background="@null"/>
+
+    <com.facebook.widget.LoginButton
+        android:id="@+id/authButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@+id/volumeOptions"
+        android:layout_toStartOf="@+id/volumeOptions" />
 
 </RelativeLayout>
