@@ -9,5 +9,6 @@
     <string name="title_activity_option">OptionActivity</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="facebook_app_id">812486878788638</string>
+    <string name="title_activity_main_activity3">MainActivity3</string>
 
 </resources>
