@@ -532,24 +532,37 @@ public class GamePlay extends ActionBarActivity {
         long tempLong = 0;
 
         if(demoOn && numPlayers == 2) {
+            System.out.println(demoCount);
             switch (demoCount) {
-                case 0: if(player == 0) {allHands[0] = new Hand("Ad,Ah");}
-                else {allHands[1] = new Hand("9s,2s");p2c1.setVisibility(View.VISIBLE);p2c2.setVisibility(View.VISIBLE); }
+                case 0: if(player == 0) {allHands[0] = new Hand("Ad,Ah");
+                    picHands[0].setImageResource(findPic("Ad"));
+                    picHands[1].setImageResource(findPic("Ah"));}
+                else {allHands[1] = new Hand("9s,2s");p3c1.setVisibility(View.VISIBLE);p3c2.setVisibility(View.VISIBLE);}
 
-                case 1: if(player == 0) {allHands[0] = new Hand("Jd,9d");}
-                else {allHands[1] = new Hand("9s,2s");p2c1.setVisibility(View.VISIBLE);p2c2.setVisibility(View.VISIBLE);}
+                case 1: if(player == 0) {allHands[0] = new Hand("Jd,9d");
+                    picHands[0].setImageResource(findPic("Jd"));
+                    picHands[1].setImageResource(findPic("9d"));}
+                else {allHands[1] = new Hand("9s,2s");p3c1.setVisibility(View.VISIBLE);p3c2.setVisibility(View.VISIBLE);}
 
-                case 2: if(player == 0) {allHands[0] = new Hand("Ks,4s");}
-                else {allHands[1] = new Hand("9s,2s");p2c1.setVisibility(View.VISIBLE);p2c2.setVisibility(View.VISIBLE);}
+                case 2: if(player == 0) {allHands[0] = new Hand("Ks,4s");
+                    picHands[0].setImageResource(findPic("Ks"));
+                    picHands[1].setImageResource(findPic("4s"));}
+                else {allHands[1] = new Hand("9s,2s");p3c1.setVisibility(View.VISIBLE);p3c2.setVisibility(View.VISIBLE);}
 
-                case 3: if(player == 0) {allHands[0] = new Hand("Ts,8s");}
-                else {allHands[1] = new Hand("9s,2s");p2c1.setVisibility(View.VISIBLE);p2c2.setVisibility(View.VISIBLE);}
+                case 3: if(player == 0) {allHands[0] = new Hand("Ts,8s");
+                    picHands[0].setImageResource(findPic("Ts"));
+                    picHands[1].setImageResource(findPic("8s"));}
+                else {allHands[1] = new Hand("9s,2s");p3c1.setVisibility(View.VISIBLE);p3c2.setVisibility(View.VISIBLE);}
 
-                case 4: if(player == 0) {allHands[0] = new Hand("7h,2d");}
-                else {allHands[1] = new Hand("9s,2s");p2c1.setVisibility(View.VISIBLE);p2c2.setVisibility(View.VISIBLE);}
+                case 4: if(player == 0) {allHands[0] = new Hand("7h,2d");
+                    picHands[0].setImageResource(findPic("7h"));
+                    picHands[1].setImageResource(findPic("2d"));}
+                else {allHands[1] = new Hand("9s,2s");p3c1.setVisibility(View.VISIBLE);p3c2.setVisibility(View.VISIBLE);}
             }
-
-
+            bitDeck.removeCards(allHands[player].hCards);
+            allHands[player].fold = false;
+            picHands[2].setImageResource(findPic("9s"));
+            picHands[3].setImageResource(findPic("2s"));
         }
         else {
             //finds bit mask for cards
