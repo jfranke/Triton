@@ -14,12 +14,12 @@ public class AiRate {
     public AiRate(String hand, String name) {
 
         String base;
-        if (checkCards(hand, "Kd,4h")) {
-            base = "Kd,4h";
+        if (checkCards(hand, "9s,2s")) {
+            base = "9s,2s";
         }
 
-        else if (checkCards(hand, "9s,2s")) {
-            base = "9s,2s";
+        else if (checkCards(hand, "Kd,4h")) {
+            base = "Kd,4h";
         }
 
         else {

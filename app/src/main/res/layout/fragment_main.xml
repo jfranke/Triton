@@ -1,7 +1,6 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" tools:context="cse190.triton.MainFragment"
-    android:id="@+id/content">
+    android:layout_height="match_parent" tools:context="cse190.triton.MainFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <com.facebook.widget.LoginButton
@@ -10,5 +9,24 @@
         android:layout_height="wrap_content"
         android:layout_gravity="left|top"
         android:layout_alignParentBottom="true" />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Play as Guest"
+        android:id="@+id/playButton"
+        android:layout_gravity="right|bottom"
+        android:onClick="goOptions"
+        android:width="150dp"
+        android:textColor="#ffffffff" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Welcome to the School of Hold &apos;em"
+        android:id="@+id/welcome"
+        android:layout_gravity="center"
+        android:layout_marginTop="80dp"
+        android:textColor="@color/background_material_light" />
 
 </FrameLayout>

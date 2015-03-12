@@ -13,11 +13,4 @@
         android:padding="10dp"
         android:background="@null"/>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Play as Guest"
-        android:id="@+id/playButton"
-        android:layout_gravity="right|bottom"
-        android:onClick="goOptions"/>
 </FrameLayout>

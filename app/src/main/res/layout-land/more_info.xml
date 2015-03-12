@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:background="@android:color/background_light"
+    android:gravity="center"
+    android:weightSum="1">
+    <ScrollView
+        android:layout_width="365dp"
+        android:layout_height="320dp"
+        android:orientation="vertical"
+        android:padding="10dp"
+        android:background="@android:color/darker_gray">
+        <GridLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:rowCount="12"
+            android:columnCount="2"
+            android:useDefaultMargins="true">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src = "@drawable/dealer"
+                android:layout_gravity="center"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Small Blind: "
+                android:textSize="10dp"
+                android:layout_gravity="center"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Big Blind: "
+                android:textSize="10dp"
+                android:layout_gravity="center"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ante: "
+                android:textSize="10dp"
+                android:layout_gravity="center"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Flop: "
+                android:textSize="10dp"
+                android:layout_gravity="center"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Turn: "
+                android:textSize="10dp"
+                android:layout_gravity="center"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="River: "
+                android:textSize="10dp"
+                android:layout_gravity="center"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Check: "
+                android:textSize="10dp"
+                android:layout_gravity="center"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Call: "
+                android:textSize="10dp"
+                android:layout_gravity="center"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Raise: "
+                android:textSize="10dp"
+                android:layout_gravity="center"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="All in: "
+                android:textSize="10dp"
+                android:layout_gravity="center"/>
+            <Space android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+
+            <TextView
+                android:layout_width="280dp"
+                android:layout_height="wrap_content"
+                android:text="The dealer button, also just known as the button. The button decides on who would be small blind, big blind, and who starts bidding. The table is a circle, the person to the left of the dealer button is small blind, the person to the left of the small blind is the big blind, and finally the person who starts the better after each round is to the left of the big blind. See below for more description of small and big blind."
+                android:layout_gravity="center"/>
+
+            <TextView
+                android:layout_width="280dp"
+                android:layout_height="wrap_content"
+                android:text="Small blind is generally half the amount of big blind that is set out automatically at the beginning before players get their hands. It is part of the initial betting that takes place before the flop is shown. To call the initial bet, you only have to call the rest of the bet that the small blind does not cover. The minimum bet to call is twice your small blind."
+                android:layout_gravity="center"/>
+
+            <TextView
+                android:layout_width="280dp"
+                android:layout_height="wrap_content"
+                android:text="Big blind is the full minimum amount to bet in the initial bet before the flop. The person with the big blind is the only person able to check on the initial bet if no one raises. "
+                android:layout_gravity="center"/>
+            <TextView
+                android:layout_width="280dp"
+                android:layout_height="wrap_content"
+                android:text="Ante is the system where all players put in a set amount into the pot before hands are dealt. This is to discourage players from only playing with only good hands because they will slowly lose money even if they decide not to play their hands."
+                android:layout_gravity="center"/>
+            <TextView
+                android:layout_width="280dp"
+                android:layout_height="wrap_content"
+                android:text="Flop is the first three cards shown in the middle of the table after the initial betting is concluded. Before the flop is shown, a card is burned (discarded) from the top of the deck to make cheating a little harder."
+                android:layout_gravity="center"/>
+
+            <TextView
+                android:layout_width="280dp"
+                android:layout_height="wrap_content"
+                android:text="After betting for the flop show, then another card is burned and then the 4th card is shown. "
+                android:layout_gravity="center"/>
+
+            <TextView
+                android:layout_width="280dp"
+                android:layout_height="wrap_content"
+                android:text="The river is the 5th and last card to be shown. After the betting phase ends, all players participating in the round will show their respected hands and then a winner is determined. "
+                android:layout_gravity="center"/>
+
+            <TextView
+                android:layout_width="280dp"
+                android:layout_height="wrap_content"
+                android:text="Check is used when players do not want to bet. If everyone checks then the next card is shown without any money added to the pot. Checking is recommended if you do not think you have great cards, so maybe C D or F grade hands."
+                android:layout_gravity="center"/>
+
+            <TextView
+                android:layout_width="280dp"
+                android:layout_height="wrap_content"
+                android:text="Call is used to bet the same amount as someone has raised. If everyone on the table calls or folds, then betting is over and the next card or cards are shown."
+                android:layout_gravity="center"/>
+
+            <TextView
+                android:layout_width="280dp"
+                android:layout_height="wrap_content"
+                android:text="Raising is used when a player wants the other played to bet more money in before the next set of card or cards shown. Minimum raise is 1 more than the current bet and max is all your money."
+                android:layout_gravity="center"/>
+
+            <TextView
+                android:layout_width="280dp"
+                android:layout_height="wrap_content"
+                android:text="All in is when the user bets all the money they currently have. If people call him, he could not participate in the next few bets if they are any. The other plays will bet on a side pot so the player can only win his amount of money times the amount of players who called him. "
+                android:layout_gravity="center"/>
+
+            <Button
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Ok"
+                android:id="@+id/exitmoreInfo" />
+
+        </GridLayout>
+
+    </ScrollView>
+</LinearLayout>

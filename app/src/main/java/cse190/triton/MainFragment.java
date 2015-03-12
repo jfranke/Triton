@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.app.Fragment;
+import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.facebook.Request;
 import com.facebook.Response;
@@ -34,6 +36,8 @@ public class MainFragment extends Fragment {
     public static final String TAG = "MainFragment";
     private Session.StatusCallback statusCallback = new SessionStatusCallback();
     LoginButton authButton;
+    Button play;
+    TextView welcome;
 
 
     /**
@@ -69,6 +73,9 @@ public class MainFragment extends Fragment {
         authButton = (LoginButton) view.findViewById(R.id.authButton);
         authButton.setFragment(this);
         authButton.setReadPermissions(Arrays.asList("public_profile"));
+
+        play = (Button) view.findViewById(R.id.playButton);
+        welcome = (TextView) view.findViewById(R.id.welcome);
 
         Session session = Session.getActiveSession();
         if (session == null) {
@@ -117,16 +124,20 @@ public class MainFragment extends Fragment {
         Session session = Session.getActiveSession();
         if (session.isOpened()) {
             Log.d("Hello","logged in");
-            Intent i = new Intent(getActivity(), MainActivity.class);
-            startActivity(i);
+//            Intent i = new Intent(getActivity(), MainActivity.class);
+  //          startActivity(i);
+            play.setText("Play");
 
         } else {
             Log.d("Hello", "Login Failed");
+            Settings.userStuff = null;
             authButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View view) {
                     onClickLogin();
                 }
             });
+            welcome.setText("Welcome to the School of Hold 'em ");
+            play.setText("Play as Guest");
         }
     }
 
@@ -156,17 +167,15 @@ public class MainFragment extends Fragment {
                     @Override
                     public void onCompleted(GraphUser user, Response response) {
                         Log.i("fb", "fb user: " + user.toString());
-
+                        Settings.userStuff = user;
                         String fbId = user.getId();
                         String fbName = user.getFirstName();
                         String gender = user.asMap().get("gender").toString();
-                        Toast.makeText(getActivity().getApplicationContext(), "welcome back " + fbName, Toast.LENGTH_SHORT).show();
+                        welcome.setText("Welcome back " + fbName);
                     }
                 });
             }
         }
     }
-
-
 
 }

@@ -11,8 +11,7 @@
         android:layout_height="320dp"
         android:orientation="vertical"
         android:padding="10dp"
-        android:background="@android:color/darker_gray"
-        android:layout_gravity="center">
+        android:background="@android:color/darker_gray">
         <GridLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -51,29 +50,29 @@
             <TextView
                 android:layout_width="280dp"
                 android:layout_height="wrap_content"
-                android:text="A is the best grade, you have a high chance of winning and because of this you should be raising or at least calling"
+                android:text="A is the best grade, you have a high chance of winning and because of this you should be raising or at least calling anything that the opponents bet. Even if they go all in, it is suggested to go all in as well."
                 android:layout_gravity="center"/>
 
             <TextView
                 android:layout_width="280dp"
                 android:layout_height="wrap_content"
-                android:text="B is the best grade, you have a high chance of winning and because of this you should be raising or at least calling"
-                android:layout_gravity="center"/>
+                android:text="B is the second best grade, your chance of winning is between medium and high chance of winning. We suggest that you call or even raise a little bit. Going all in is also plausible if you hit something on the table. "
+            android:layout_gravity="center"/>
 
             <TextView
                 android:layout_width="280dp"
                 android:layout_height="wrap_content"
-                android:text="C is the best grade, you have a high chance of winning and because of this you should be raising or at least calling"
+                android:text="C is the average grade for a little above average hands. The chance of winning is a little over a coin flip versus the average hand. We suggest that you call low bets, otherwise fold"
                 android:layout_gravity="center"/>
             <TextView
                 android:layout_width="280dp"
                 android:layout_height="wrap_content"
-                android:text="D is the best grade, you have a high chance of winning and because of this you should be raising or at least calling"
+                android:text="D is the second worse grade for a hand. You will lose over 50% of the time against an average poker hand. We suggest you check if possible to see if you get anything, otherwise just fold."
                 android:layout_gravity="center"/>
             <TextView
                 android:layout_width="280dp"
                 android:layout_height="wrap_content"
-                android:text="F is the best grade, you have a high chance of winning and because of this you should be raising or at least calling"
+                android:text="F is the worse grade for hands. You will lose over 60% of the time against an average poker hand. We again suggest you fold unless you can check to see if you get anything from the card flips."
                 android:layout_gravity="center"/>
             <Button
                 android:layout_width="100dp"

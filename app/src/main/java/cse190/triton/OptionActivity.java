@@ -49,6 +49,7 @@ public class OptionActivity extends ActionBarActivity {
         final EditText aiName2 = (EditText)findViewById(R.id.aiName2);
         final EditText aiName3 = (EditText)findViewById(R.id.aiName3);
         final CheckBox anteOnBox = (CheckBox) findViewById(R.id.anteOnBox);
+        final CheckBox demoOnBox = (CheckBox) findViewById(R.id.demoOn);
         //aiName setup
 
 
@@ -118,6 +119,18 @@ public class OptionActivity extends ActionBarActivity {
                     if(anteOnBox.isChecked()) {
                         Settings.anteOn = true;
                     }
+
+                    else {
+                        Settings.anteOn = false;
+                    }
+
+                    if(demoOnBox.isChecked()) {
+                        Settings.demoOn = true;
+                    }
+
+                    else {
+                        Settings.demoOn = false;
+                    }
                     Settings.setNumPlayers(tempPlayers + 1);
                     Settings.setUserID(tempID, aiID, aiID2, aiID3);
                     System.out.println(tempPlayers + 1);
@@ -131,28 +144,6 @@ public class OptionActivity extends ActionBarActivity {
 
     }
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_option, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 
     public void startGame(View view) {
         service.doUnbindService();

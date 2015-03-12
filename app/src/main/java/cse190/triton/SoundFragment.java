@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.app.Fragment;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
@@ -16,11 +17,9 @@ public class SoundFragment extends Fragment  implements View.OnClickListener{
     LinearLayout layout;
     LinearLayout mainLayout;
 
-
     public SoundFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -28,6 +27,7 @@ public class SoundFragment extends Fragment  implements View.OnClickListener{
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_sound, container, false);
         ImageButton soundOptions = (ImageButton) view.findViewById(R.id.soundButton);
+
         soundOptions.setOnClickListener(this);
         return view;
     }

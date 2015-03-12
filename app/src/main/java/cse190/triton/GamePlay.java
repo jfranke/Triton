@@ -30,8 +30,8 @@ package cse190.triton;
         import android.widget.Button;
 
         import android.widget.ImageView;
-        import android.widget.Toast;
         import android.view.ViewGroup.LayoutParams;
+        import android.widget.VerticalSeekBar;
 
 
         import static cse190.triton.NikiConstants.*;
@@ -52,6 +52,8 @@ public class GamePlay extends ActionBarActivity {
     TextView aiBet2;
     TextView aiBet3;
     TextView[] allBets  = new TextView[3];
+
+    TextView moreInfo;
 
     int potValue = 0;
     final int ante = ((Integer.parseInt(Settings.getMoney("User"))) / 100);
@@ -125,8 +127,11 @@ public class GamePlay extends ActionBarActivity {
     Boolean userAllIn;
     Boolean raiseFlag;
     Boolean foldFlag;
+    Boolean demoOn = Settings.demoOn;
+    int demoCount = 0;
 
-    SeekBar numControl;
+
+    VerticalSeekBar raiseControl;
 
     ArrayList<Integer>  tieWinners;
     String[] tieWinnersNames;
@@ -177,16 +182,30 @@ public class GamePlay extends ActionBarActivity {
         aiBet = (TextView) findViewById(R.id.aiBet);
         aiBet2 = (TextView) findViewById(R.id.aiBet2);
         aiBet3 = (TextView) findViewById(R.id.aiBet3);
-        allBets[0] = aiBet;
-        allBets[1] = aiBet2;
+        if(numPlayers == 2) {
+            allBets[0] = aiBet2;
+            allBets[1] = aiBet;
+        }
+        else {
+            allBets[0] = aiBet;
+            allBets[1] = aiBet2;
+        }
         allBets[2] = aiBet3;
 
         pot = (TextView) findViewById(R.id.pot);
         aiCommands = (TextView) findViewById(R.id.aiCommands);
         aiCommands2 = (TextView) findViewById(R.id.aiCommands2);
         aiCommands3 = (TextView) findViewById(R.id.aiCommands3);
-        allCommands[0] = aiCommands;
-        allCommands[1] = aiCommands2;
+
+        if(numPlayers == 2) {
+            allCommands[1] = aiCommands;
+            allCommands[0] = aiCommands2;
+        }
+
+        else {
+            allCommands[0] = aiCommands;
+            allCommands[1] = aiCommands2;
+        }
         allCommands[2] = aiCommands3;
         grade = (TextView) findViewById(R.id.grade);
 
@@ -197,6 +216,15 @@ public class GamePlay extends ActionBarActivity {
         allBets[0].setText("");
         allBets[1].setText("");
         allBets[2].setText("");
+
+        moreInfo = (TextView) findViewById(R.id.moreInfo);
+
+        moreInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showMoreInfo(v);
+            }
+        });
 
         updateMoneyUI();
 
@@ -216,10 +244,10 @@ public class GamePlay extends ActionBarActivity {
 
         picHands[0] = p1c1;
         picHands[1] = p1c2;
-        picHands[2] = p2c1;
-        picHands[3] = p2c2;
-        picHands[4] = p3c1;
-        picHands[5] = p3c2;
+        picHands[2] = p3c1;
+        picHands[3] = p3c2;
+        picHands[4] = p2c1;
+        picHands[5] = p2c2;
         picHands[6] = p4c1;
         picHands[7] = p4c2;
 
@@ -228,9 +256,16 @@ public class GamePlay extends ActionBarActivity {
         dealer3 = (ImageView) findViewById(R.id.dealer3);
         dealer4 = (ImageView) findViewById(R.id.dealer4);
 
+
         dealerPic[0] = dealer;
-        dealerPic[1] = dealer2;
-        dealerPic[2] = dealer3;
+        if(numPlayers == 2) {
+            dealerPic[1] = dealer3;
+        }
+
+        else {
+            dealerPic[1] = dealer2;
+            dealerPic[2] = dealer3;
+        }
         dealerPic[3] = dealer4;
 
         if(numPlayers < 4 ) {
@@ -273,7 +308,7 @@ public class GamePlay extends ActionBarActivity {
 
         raiseNum = (TextView) findViewById(R.id.raiseNum);
         raiseNum.setText("0");
-        numControl = (SeekBar) findViewById(R.id.raiseSeek);
+        raiseControl = (VerticalSeekBar) findViewById(R.id.vertSeekBar);
         updateRaiseSeek();
 
         foldButton.setOnClickListener(new View.OnClickListener(){
@@ -496,25 +531,48 @@ public class GamePlay extends ActionBarActivity {
     public void setHands(int player) {
         long tempLong = 0;
 
-        //finds bit mask for cards
-        for(int m = player * 2; m < (player * 2) + 2; m++) {
-            int temp = 0;
-            for (int i = 0; i < DECK_STRINGS.length - 1; i++) {
-                if (DECK_STRINGS[deck.get(m)].equals(DECK_STRINGS[i])) {
-                    temp = i;
-                    picHands[m].setImageResource(findPic(DECK_STRINGS[i]));
-                    break;
-                }
+        if(demoOn && numPlayers == 2) {
+            switch (demoCount) {
+                case 0: if(player == 0) {allHands[0] = new Hand("Ad,Ah");}
+                else {allHands[1] = new Hand("9s,2s");p2c1.setVisibility(View.VISIBLE);p2c2.setVisibility(View.VISIBLE); }
+
+                case 1: if(player == 0) {allHands[0] = new Hand("Jd,9d");}
+                else {allHands[1] = new Hand("9s,2s");p2c1.setVisibility(View.VISIBLE);p2c2.setVisibility(View.VISIBLE);}
+
+                case 2: if(player == 0) {allHands[0] = new Hand("Ks,4s");}
+                else {allHands[1] = new Hand("9s,2s");p2c1.setVisibility(View.VISIBLE);p2c2.setVisibility(View.VISIBLE);}
+
+                case 3: if(player == 0) {allHands[0] = new Hand("Ts,8s");}
+                else {allHands[1] = new Hand("9s,2s");p2c1.setVisibility(View.VISIBLE);p2c2.setVisibility(View.VISIBLE);}
+
+                case 4: if(player == 0) {allHands[0] = new Hand("7h,2d");}
+                else {allHands[1] = new Hand("9s,2s");p2c1.setVisibility(View.VISIBLE);p2c2.setVisibility(View.VISIBLE);}
             }
 
-            tempLong = tempLong | DECK_BIT_MASKS[temp];
 
         }
+        else {
+            //finds bit mask for cards
+            for (int m = player * 2; m < (player * 2) + 2; m++) {
+                int temp = 0;
+                for (int i = 0; i < DECK_STRINGS.length - 1; i++) {
+                    if (DECK_STRINGS[deck.get(m)].equals(DECK_STRINGS[i])) {
+                        temp = i;
+                        picHands[m].setImageResource(findPic(DECK_STRINGS[i]));
+                        break;
+                    }
+                }
 
-        //set cards to array and remove cards from deck
-        allHands[player] = new Hand(tempLong);
-        bitDeck.removeCards(allHands[player].hCards);
-        allHands[player].fold = false;
+                tempLong = tempLong | DECK_BIT_MASKS[temp];
+
+            }
+
+
+            //set cards to array and remove cards from deck
+            allHands[player] = new Hand(tempLong);
+            bitDeck.removeCards(allHands[player].hCards);
+            allHands[player].fold = false;
+        }
 
     }
 
@@ -536,6 +594,8 @@ public class GamePlay extends ActionBarActivity {
         testButton.setEnabled(false);
         foldButton.setEnabled(false);
         raiseButton.setEnabled(false);
+        showCards();
+
 
             myHandler.postDelayed(new Runnable() {
                 @Override
@@ -560,6 +620,13 @@ public class GamePlay extends ActionBarActivity {
                     //sets all hands and their pictures
                     for (int n = 0; n < numPlayers; n++) {
                         setHands(n);
+                    }
+
+                    if(demoCount > 4) {
+                        demoCount = 0;
+                    }
+                    else {
+                        demoCount++;
                     }
 
                     ai = new AiRate(allHands[1].getStrHand(), Settings.aiName);
@@ -619,7 +686,7 @@ public class GamePlay extends ActionBarActivity {
                     if(!allHands[0].bigBlind) {
                         testButton.setText("CALL");
                     }
-
+                    hideCards();
 
                 }
             }, 5000);
@@ -851,6 +918,25 @@ public class GamePlay extends ActionBarActivity {
         popupInfo.showAtLocation(oldView, Gravity.CENTER, 0, 0);
     }
 
+    public void showMoreInfo(View oldView) {
+        LayoutInflater layoutInflater
+                = (LayoutInflater)getBaseContext()
+                .getSystemService(LAYOUT_INFLATER_SERVICE);
+        View popupView = layoutInflater.inflate(R.layout.more_info, null);
+        final PopupWindow popupInfo = new PopupWindow(
+                popupView,
+                LayoutParams.WRAP_CONTENT,
+                LayoutParams.WRAP_CONTENT);
+
+        Button okButton = (Button)popupView.findViewById(R.id.exitmoreInfo);
+        okButton.setOnClickListener(new Button.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                popupInfo.dismiss();
+            }});
+        popupInfo.showAtLocation(oldView, Gravity.CENTER, 0, 0);
+    }
+
     public void goHome(View view) {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
@@ -875,7 +961,7 @@ public class GamePlay extends ActionBarActivity {
                     numCallers = 1;
                     doAiRaise(value);
                     allAi[i].currentBet = aiRaisePot;
-                    allCommands[i].setText( allAi[i].aiName + " has raised by " + aiRaisePot);
+                    allCommands[i].setText("has raised to");
                     allBets[i].setText(Integer.toString(allAi[i].currentBet));
 
                     if (aiRaisePot == Settings.getIntMoney("User")) {
@@ -892,16 +978,16 @@ public class GamePlay extends ActionBarActivity {
                     allAi[i].currentBet = value;
                     aiRaisePot = value;
                     if (value > 0) {
-                        allCommands[i].setText(allAi[i].aiName + " has called " + value);
+                        allCommands[i].setText("has called");
                         allAi[i].currentBet = value;
                     } else {
-                        allCommands[i].setText(allAi[i].aiName + " has checked");
+                        allCommands[i].setText("has checked");
                     }
                     allBets[i].setText(Integer.toString(allAi[i].currentBet));
                 } else {
                     numCallers++;
                     allAi[i].fold = true;
-                    allCommands[i].setText(allAi[i].aiName + " has fold");
+                    allCommands[i].setText("has fold");
                     if (checkFolds()) {
                         addWinner(0);
                         pot.setText("pot: " + potValue);
@@ -1013,8 +1099,9 @@ public class GamePlay extends ActionBarActivity {
     }
 
     public void updateRaiseSeek() {
-        numControl.setMax(Settings.getIntMoney("User") - minRaise - 1);
-        numControl.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+        raiseControl.setMax(Settings.getIntMoney("User") - minRaise - 1);
+        raiseControl.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
             @Override
             public void onStopTrackingTouch(SeekBar arg0) {
@@ -1030,11 +1117,9 @@ public class GamePlay extends ActionBarActivity {
             public void onProgressChanged(SeekBar arg0, int arg1, boolean arg2) {
                 raiseNum.setText(Integer.toString(arg1 + minRaise + 1));
 
-                if((arg1 + minRaise) == Settings.getIntMoney("User") ) {
+                if ((arg1 + minRaise + 1) == Settings.getIntMoney("User")) {
                     raiseButton.setText("ALL IN");
-                }
-
-                else {
+                } else {
                     raiseButton.setText("RAISE");
                 }
             }
@@ -1095,6 +1180,7 @@ public class GamePlay extends ActionBarActivity {
             }
             dealerPic[d].setVisibility(View.GONE);
         }
+
         dealerPic[dealerNum].setVisibility(View.VISIBLE);
         setAiCurrentBet();
         dealerNum++;
@@ -1112,6 +1198,36 @@ public class GamePlay extends ActionBarActivity {
             if(allAi[w].currentBet > 0) {
                 allBets[w].setText(String.valueOf(allAi[w].currentBet));
             }
+        }
+    }
+
+    public void showCards() {
+        p3c1.setVisibility(View.VISIBLE);
+        p3c2.setVisibility(View.VISIBLE);
+
+        if(numPlayers > 2) {
+            p2c1.setVisibility(View.VISIBLE);
+            p2c2.setVisibility(View.VISIBLE);
+        }
+
+        if(numPlayers > 3) {
+            p4c1.setVisibility(View.VISIBLE);
+            p4c2.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public void hideCards() {
+        p3c1.setVisibility(View.GONE);
+        p3c2.setVisibility(View.GONE);
+
+        if(numPlayers > 2) {
+            p2c1.setVisibility(View.GONE);
+            p2c2.setVisibility(View.GONE);
+        }
+
+        if(numPlayers > 3) {
+            p4c1.setVisibility(View.GONE);
+            p4c2.setVisibility(View.GONE);
         }
     }
 
@@ -1173,7 +1289,7 @@ public class GamePlay extends ActionBarActivity {
             case "4s":  return R.drawable.spades4;
             case "3s":  return R.drawable.spades3;
             case "2s":  return R.drawable.spades2;
-            default: return R.drawable.b1fv;
+            default: return R.drawable.spades3;
         }
 
     }

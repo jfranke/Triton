@@ -22,6 +22,8 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
+import android.widget.Toast;
+
 import com.facebook.*;
 
 public class MainActivity extends FragmentActivity {
@@ -41,6 +43,8 @@ public class MainActivity extends FragmentActivity {
         music = new Intent();
         music.setClass(this,MusicService.class);
         startService(music);
+
+        System.out.println((Settings.userStuff != null));
     }
 
     @Override

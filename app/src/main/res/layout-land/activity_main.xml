@@ -5,6 +5,6 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin" tools:context="cse190.triton.MainActivity"
     android:id="@+id/fragmentContainer"
-    android:background="@drawable/titlebackground">
+    android:background="@drawable/titlescreenbackgroundresized2">
 
 </RelativeLayout>

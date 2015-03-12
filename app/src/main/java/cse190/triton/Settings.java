@@ -1,5 +1,7 @@
 package cse190.triton;
 
+import com.facebook.model.GraphUser;
+
 public class Settings {
 
     static int numPlayers = 2;
@@ -12,7 +14,9 @@ public class Settings {
     static String aiName2 = "";
     static String aiName3 = "";
     static boolean anteOn = false;
+    static boolean demoOn = false;
     static int handStartingMoney = 0;
+    static GraphUser userStuff;
 
     public static int getNumPlayers() {
         return numPlayers;
@@ -123,4 +127,6 @@ public class Settings {
         aiMoney3 = "100000";
         playerMoney = "5000";
     }
+
+
 }
