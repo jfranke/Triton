@@ -383,22 +383,22 @@ android:paddingBottom="@dimen/activity_vertical_margin" tools:context="cse190.tr
         android:layout_height="wrap_content"
         android:id="@+id/p3c1"
         android:src="@drawable/b1fv"
-        android:visibility="gone"
+        android:visibility="visible"
         android:focusableInTouchMode="false"
-        android:layout_alignTop="@+id/aiName2"
-        android:layout_toRightOf="@+id/flop2"
-        android:layout_toEndOf="@+id/flop2" />
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/gradeText"
+        android:layout_toEndOf="@+id/gradeText" />
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/p3c2"
         android:src="@drawable/b1fv"
-        android:visibility="gone"
+        android:visibility="visible"
         android:focusableInTouchMode="true"
-        android:layout_alignTop="@+id/p3c1"
-        android:layout_alignLeft="@+id/p1c2"
-        android:layout_alignStart="@+id/p1c2" />
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/p3c1"
+        android:layout_toEndOf="@+id/p3c1" />
 
     <ImageView
         android:layout_width="wrap_content"
@@ -452,6 +452,18 @@ android:paddingBottom="@dimen/activity_vertical_margin" tools:context="cse190.tr
         android:layout_alignParentTop="true"
         android:layout_alignLeft="@+id/raise"
         android:layout_alignStart="@+id/raise" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="50%"
+        android:id="@+id/gradePercent"
+        android:textSize="20dp"
+        android:textColor="#fffcfbe3"
+        android:layout_above="@+id/questionmark"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
 </RelativeLayout>
 

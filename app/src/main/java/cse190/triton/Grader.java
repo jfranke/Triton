@@ -2,15 +2,16 @@ package cse190.triton;
 
 public class Grader {
     public String grade;
+    public double winRate;
 
     public Grader(String hand) {
         String base;
-        if (checkCards(hand, "Kd,4h")) {
-            base = "Kd,4h";
+        if (checkCards(hand, "9s,2s")) {
+            base = "9s,2s";
         }
 
-        else if (checkCards(hand, "9s,2s")) {
-            base = "9s,2s";
+        else if (checkCards(hand, "Kd,4h")) {
+            base = "Kd,4h";
         }
 
         else {
@@ -62,6 +63,7 @@ public class Grader {
         winPercentage = hands[0].wins / (double)(gradeDeck.keysBoard.length) * 100;
         winPercentage = (double) Math.round(winPercentage * 10) / 10;
 
+        winRate = winPercentage;
         grade = giveGrade(winPercentage);
     }
 

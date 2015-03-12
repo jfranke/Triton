@@ -54,6 +54,7 @@ public class GamePlay extends ActionBarActivity {
     TextView[] allBets  = new TextView[3];
 
     TextView moreInfo;
+    TextView gradePercent;
 
     int potValue = 0;
     final int ante = ((Integer.parseInt(Settings.getMoney("User"))) / 100);
@@ -228,6 +229,8 @@ public class GamePlay extends ActionBarActivity {
 
         updateMoneyUI();
 
+        gradePercent = (TextView) findViewById(R.id.gradePercent);
+        gradePercent.setText("");
         //setting up the pot
 
         //ante is starting money / 100
@@ -385,6 +388,7 @@ public class GamePlay extends ActionBarActivity {
                             v.setTag(3);
                             testButton.setText("CHECK");
                             resetValues();
+                            showCards();
                         }
                     }
                     //if ai calls already then you just show
@@ -393,6 +397,7 @@ public class GamePlay extends ActionBarActivity {
                         v.setTag(3);
                         testButton.setText("CHECK");
                         resetValues();
+                        showCards();
                     }
                 } else {
                     numCallers++;
@@ -465,6 +470,7 @@ public class GamePlay extends ActionBarActivity {
                     } else if (status == 2) {
                         river.setImageResource(findPic(flopper[4]));
                         testButton.setTag(3);
+                        showCards();
 
                     } else {
                         figureOutWinner();
@@ -532,32 +538,36 @@ public class GamePlay extends ActionBarActivity {
         long tempLong = 0;
 
         if(demoOn && numPlayers == 2) {
-            System.out.println(demoCount);
             switch (demoCount) {
                 case 0: if(player == 0) {allHands[0] = new Hand("Ad,Ah");
                     picHands[0].setImageResource(findPic("Ad"));
                     picHands[1].setImageResource(findPic("Ah"));}
-                else {allHands[1] = new Hand("9s,2s");p3c1.setVisibility(View.VISIBLE);p3c2.setVisibility(View.VISIBLE);}
+                    else {allHands[1] = new Hand("9s,2s");}
+                    break;
 
-                case 1: if(player == 0) {allHands[0] = new Hand("Jd,9d");
-                    picHands[0].setImageResource(findPic("Jd"));
-                    picHands[1].setImageResource(findPic("9d"));}
-                else {allHands[1] = new Hand("9s,2s");p3c1.setVisibility(View.VISIBLE);p3c2.setVisibility(View.VISIBLE);}
+                case 1: if(player == 0) {allHands[0] = new Hand("Qs,Js");
+                    picHands[0].setImageResource(findPic("Qs"));
+                    picHands[1].setImageResource(findPic("Js"));}
+                    else {allHands[1] = new Hand("9s,2s");}
+                    break;
 
-                case 2: if(player == 0) {allHands[0] = new Hand("Ks,4s");
-                    picHands[0].setImageResource(findPic("Ks"));
+                case 2: if(player == 0) {allHands[0] = new Hand("9h,7h");
+                    picHands[0].setImageResource(findPic("9h"));
+                    picHands[1].setImageResource(findPic("7h"));}
+                    else {allHands[1] = new Hand("9s,2s");}
+                    break;
+
+                case 3: if(player == 0) {allHands[0] = new Hand("8d,4s");
+                    picHands[0].setImageResource(findPic("8d"));
                     picHands[1].setImageResource(findPic("4s"));}
-                else {allHands[1] = new Hand("9s,2s");p3c1.setVisibility(View.VISIBLE);p3c2.setVisibility(View.VISIBLE);}
-
-                case 3: if(player == 0) {allHands[0] = new Hand("Ts,8s");
-                    picHands[0].setImageResource(findPic("Ts"));
-                    picHands[1].setImageResource(findPic("8s"));}
-                else {allHands[1] = new Hand("9s,2s");p3c1.setVisibility(View.VISIBLE);p3c2.setVisibility(View.VISIBLE);}
+                    else {allHands[1] = new Hand("9s,2s");}
+                    break;
 
                 case 4: if(player == 0) {allHands[0] = new Hand("7h,2d");
                     picHands[0].setImageResource(findPic("7h"));
                     picHands[1].setImageResource(findPic("2d"));}
-                else {allHands[1] = new Hand("9s,2s");p3c1.setVisibility(View.VISIBLE);p3c2.setVisibility(View.VISIBLE);}
+                    else {allHands[1] = new Hand("9s,2s");}
+                    break;
             }
             bitDeck.removeCards(allHands[player].hCards);
             allHands[player].fold = false;
@@ -659,6 +669,9 @@ public class GamePlay extends ActionBarActivity {
 
                     Grader teacher = new Grader(allHands[0].getStrHand());
                     grade.setText(teacher.returnGrade());
+                    if(demoOn) {
+                        gradePercent.setText(String.valueOf(teacher.winRate) + "%");
+                    }
 
                     flop1.setImageResource(R.drawable.b1fv);
                     flop2.setImageResource(R.drawable.b1fv);
@@ -700,6 +713,10 @@ public class GamePlay extends ActionBarActivity {
                         testButton.setText("CALL");
                     }
                     hideCards();
+                    if(demoOn) {
+                        p3c1.setVisibility(View.VISIBLE);
+                        p3c2.setVisibility(View.VISIBLE);
+                    }
 
                 }
             }, 5000);
